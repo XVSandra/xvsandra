@@ -79,7 +79,7 @@ export default function Page() {
         <img
           src="/images/flores-orilla.png"
           alt="Decoración floral"
-          className="w-full h-full object-cover opacity-30"
+          className="w-full h-full object-cover opacity-10"
         />
       </div>
 
@@ -213,7 +213,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="py-16 px-6 text-center relative z-10" data-aos="fade-up">
+      <section className="py-20 px-6 text-center relative z-10" data-aos="fade-up">
         <h2 className="text-3xl md:text-5xl font-bold text-[#FF3471] mb-8">
           Detalles del Evento
         </h2>
@@ -222,7 +222,7 @@ export default function Page() {
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="100">
             <img src="/icons/ubicacion.png" alt="Ubicación" className="w-10 h-10 mb-4" />
             <p className="font-semibold text-[#FEA201]">Salón Palladium</p>
-            <p>Ruanda Pte. Oriente 1356, Villanova, 21307 Mexicali, B.C.</p>
+            <p>RBlvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
           </div>
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="200">
@@ -232,7 +232,7 @@ export default function Page() {
               className="rounded-lg shadow-lg w-72 h-auto object-cover"
             />
             <a
-              href="https://maps.app.goo.gl/oaYpVVSQjtdi7qzv5"
+              href="https://maps.app.goo.gl/4cgn53V6EUYMUF6E9"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-block bg-[#FEA201] text-white px-6 py-2 rounded-full shadow hover:bg-[#FF3471] transition"
@@ -250,7 +250,7 @@ export default function Page() {
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
             <img src="/icons/obsequio.png" alt="Obsequios" className="w-10 h-10 mb-4" />
             <p className="font-semibold text-[#FEA201]">Obsequios:</p>
-            <p>Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo tendremos lluvia de sobres.</p>
+            <p>Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo, tendremos lluvia de sobres.</p>
           </div>
         </div>
       </section>
