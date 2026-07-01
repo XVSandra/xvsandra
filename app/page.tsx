@@ -7,7 +7,7 @@ import AOS from "aos";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Howl } from "howler";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
 import RSVPForm from "@/components/RSVPForm";
@@ -15,6 +15,8 @@ import ContadorElegante from "@/components/ContadorElegante";
 
 export default function Page() {
   const [nombreInvitado, setNombreInvitado] = useState("Invitado especial");
+const [pasesAsignados, setPasesAsignados] = useState(1);
+const [codigoInvitado, setCodigoInvitado] = useState("");
   const [audio, setAudio] = useState<Howl | null>(null);
   const [sonando, setSonando] = useState(false);
   const [mensajeLibro, setMensajeLibro] = useState("");
@@ -40,28 +42,60 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    AOS.init({ duration: 1200, once: true });
+ useEffect(() => {
+  AOS.init({ duration: 1200, once: true });
 
-    const params = new URLSearchParams(window.location.search);
-    const idInvitado = params.get("idInvitado");
-    if (idInvitado) {
-      setNombreInvitado(`Invitado #${idInvitado}`);
-    }
+ const params = new URLSearchParams(window.location.search);
 
-    const musica = new Howl({
-      src: ["/musica.mp3"],
-      html5: true,
-      volume: 0.4,
-      loop: true,
+// Acepta ?codigo=A001 y también ?idInvitado=A001 por si usas links anteriores
+const codigoParam = params.get("codigo") || params.get("idInvitado");
+
+if (codigoParam) {
+  const codigoLimpio = codigoParam.trim().toUpperCase();
+
+  setCodigoInvitado(codigoLimpio);
+
+  getDoc(doc(db, "invitados", codigoLimpio))
+    .then((snapshot) => {
+      console.log("Código recibido:", codigoLimpio);
+      console.log("Documento existe:", snapshot.exists());
+
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        console.log("Datos invitado:", data);
+
+        setNombreInvitado(data.nombre || "Invitado especial");
+        setPasesAsignados(Number(data.pases) || 1);
+      } else {
+        setNombreInvitado("Invitado no encontrado");
+        setPasesAsignados(1);
+      }
+    })
+    .catch((error) => {
+      console.error("Error leyendo invitado:", error);
+      setNombreInvitado("Error al cargar invitado");
+      setPasesAsignados(1);
     });
+}
 
-    setAudio(musica);
 
-    return () => {
-      musica.unload();
-    };
-  }, []);
+
+
+
+
+  const musica = new Howl({
+    src: ["/musica.mp3"],
+    html5: true,
+    volume: 0.4,
+    loop: true,
+  });
+
+  setAudio(musica);
+
+  return () => {
+    musica.unload();
+  };
+}, []);
 
   const toggleMusica = () => {
     if (!audio) return;
@@ -317,7 +351,12 @@ export default function Page() {
       </section>
 
       <section className="py-16 relative z-10" data-aos="fade-up">
-        <RSVPForm />
+     
+<RSVPForm
+  nombreInvitado={nombreInvitado}
+  pasesAsignados={pasesAsignados}
+  codigoInvitado={codigoInvitado}
+/>
       </section>
 
       <section className="py-16 text-center relative z-10" data-aos="fade-up">
