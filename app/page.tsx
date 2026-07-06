@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Howl } from "howler";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { obtenerInvitado } from "@/lib/firestoreRest";
 
 import { db } from "@/lib/firebase";
 import RSVPForm from "@/components/RSVPForm";
@@ -42,46 +43,54 @@ const [codigoInvitado, setCodigoInvitado] = useState("");
     }
   };
 
- useEffect(() => {
+useEffect(() => {
   AOS.init({ duration: 1200, once: true });
 
- const params = new URLSearchParams(window.location.search);
+  const cargarInvitado = async () => {
+    const params = new URLSearchParams(window.location.search);
+    const codigoUrl = params.get("codigo");
 
-// Acepta ?codigo=A001 y también ?idInvitado=A001 por si usas links anteriores
-const codigoParam = params.get("codigo") || params.get("idInvitado");
-
-if (codigoParam) {
-  const codigoLimpio = codigoParam.trim().toUpperCase();
-
-  setCodigoInvitado(codigoLimpio);
-
-  getDoc(doc(db, "invitados", codigoLimpio))
-    .then((snapshot) => {
-      console.log("Código recibido:", codigoLimpio);
-      console.log("Documento existe:", snapshot.exists());
-
-      if (snapshot.exists()) {
-        const data = snapshot.data();
-        console.log("Datos invitado:", data);
-
-        setNombreInvitado(data.nombre || "Invitado especial");
-        setPasesAsignados(Number(data.pases) || 1);
-      } else {
-        setNombreInvitado("Invitado no encontrado");
-        setPasesAsignados(1);
-      }
-    })
-    .catch((error) => {
-      console.error("Error leyendo invitado:", error);
-      setNombreInvitado("Error al cargar invitado");
+    if (!codigoUrl) {
+      setNombreInvitado("Invitado especial");
       setPasesAsignados(1);
-    });
+      setCodigoInvitado("");
+      return;
+    }
+
+    try {
+      setCodigoInvitado(codigoUrl);
+
+     const invitado = await obtenerInvitado(codigoUrl);
+
+console.log("Código recibido:", codigoUrl);
+console.log("Datos invitado:", invitado);
+
+if (invitado) {
+  setNombreInvitado(invitado.nombre);
+  setPasesAsignados(invitado.pases);
+} else {
+  setNombreInvitado("Invitado no encontrado");
+  setPasesAsignados(1);
+}
+    } 
+
+
+
+catch (error: any) {
+  console.error("Error leyendo invitado:", error);
+
+  setNombreInvitado(
+    error?.code
+      ? `Error: ${error.code}`
+      : "Error al cargar invitado"
+  );
+
+  setPasesAsignados(1);
 }
 
+  };
 
-
-
-
+  cargarInvitado();
 
   const musica = new Howl({
     src: ["/musica.mp3"],
@@ -96,7 +105,6 @@ if (codigoParam) {
     musica.unload();
   };
 }, []);
-
   const toggleMusica = () => {
     if (!audio) return;
     if (sonando) {
