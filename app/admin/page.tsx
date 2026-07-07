@@ -430,12 +430,16 @@ const enviarWhatsApp = (telefono: string, codigo: string, nombre: string) => {
 
   const linkInvitacion = `${urlBaseInvitacion}/?codigo=${codigo}`;
 
-  const mensaje = `Hola ${nombre}, te compartimos tu invitación para los XV años de Sandra Alicia 💖
+  const mensaje = `Hola ${nombre} 💜
 
-Confirma tu asistencia en este link:
+Con mucha ilusión te compartimos la invitación a los XV años de Sandra Alicia.
+
+Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
 ${linkInvitacion}
 
-Código de invitación: ${codigo}`;
+Tu código de invitación es: ${codigo}
+
+Agradecemos tu respuesta a más tardar el 31 de julio.`;
 
   const urlWhatsApp = `https://wa.me/52${telefonoLimpio}?text=${encodeURIComponent(
     mensaje
@@ -443,7 +447,6 @@ Código de invitación: ${codigo}`;
 
   window.open(urlWhatsApp, "_blank");
 };
-
 
 
 
@@ -462,24 +465,20 @@ const encabezados = [
   "Link WhatsApp",
 ];
 
- const filas = registros.map((item) => {
+const filas = registros.map((item) => {
   const telefonoLimpio = item.telefono.replace(/\D/g, "");
   const linkInvitacion = `${urlBaseInvitacion}/?codigo=${item.codigo}`;
-  const mensaje = `Hola ${nombre} 💜
+
+  const mensaje = `Hola ${item.nombre} 💜
 
 Con mucha ilusión te compartimos la invitación a los XV años de Sandra Alicia.
 
 Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
 ${linkInvitacion}
 
-Tu código de invitación es: ${codigo}
+Tu código de invitación es: ${item.codigo}
 
 Agradecemos tu respuesta a más tardar el 31 de julio.`;
-
-Confirma tu asistencia en este link:
-${linkInvitacion}
-
-
 
   const linkWhatsApp = telefonoLimpio
     ? `https://wa.me/52${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`
