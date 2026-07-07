@@ -317,9 +317,14 @@ catch (error: any) {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
-              <p className="text-[#F8E7A1] font-semibold text-2xl">
-                ¡Acompáñame tú también a celebrar este momento tan especial lleno de amor, alegría y sueños cumplidos!
-              </p>
+
+
+        <p
+  className="font-['Great_Vibes'] text-4xl md:text-6xl text-[#F8E7A1] max-w-4xl mx-auto leading-tight"
+>
+  ¡Acompáñame tú también a celebrar este momento tan especial lleno de amor,
+  alegría y sueños cumplidos!
+</p>
             </div>
           </div>
         </div>
