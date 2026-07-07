@@ -35,10 +35,12 @@ const [codigoInvitado, setCodigoInvitado] = useState("");
 
     try {
       await addDoc(collection(db, "libroVisitas"), {
-        nombre: nombreInvitado,
-        mensaje: mensajeLibro,
-        timestamp: new Date(),
-      });
+  codigo: codigoInvitado || "sin-codigo",
+  nombre: nombreInvitado,
+  mensaje: mensajeLibro.trim(),
+  timestamp: new Date(),
+});
+
       setMensajeEnviado("¡Gracias por tu mensaje!");
       setMensajeLibro("");
     } catch (error) {
@@ -306,7 +308,7 @@ catch (error: any) {
 
         <div className="max-w-3xl mx-auto space-y-10 text-xl md:text-2xl">
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="100">
-            <img src="/icons/ubicacion.png" alt="Ubicación" className="w-10 h-10 mb-4" />
+            <img src="/iconos/ubicacion.png" alt="Ubicación" className="w-10 h-10 mb-4" />
             <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
             <p>Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
           </div>
@@ -328,13 +330,13 @@ catch (error: any) {
           </div>
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="300">
-            <img src="/icons/vestimenta.png" alt="Código de vestimenta" className="w-10 h-10 mb-4" />
+            <img src="/iconos/vestimenta.png" alt="Código de vestimenta" className="w-10 h-10 mb-4" />
             <p className="font-semibold text-[#B78A25]">Código de vestimenta:</p>
             <p>Formal</p>
           </div>
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
-            <img src="/icons/obsequio.png" alt="Obsequios" className="w-10 h-10 mb-4" />
+            <img src="/iconos/obsequio.png" alt="Obsequios" className="w-10 h-10 mb-4" />
             <p className="font-semibold text-[#B78A25]">Obsequios:</p>
             <p>Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo, tendremos lluvia de sobres.</p>
           </div>
@@ -430,7 +432,7 @@ catch (error: any) {
 
       <section className="py-16 px-6 text-center bg-[#FFF7EC]/90 relative z-10" data-aos="fade-up">
         <div className="flex flex-col items-center space-y-6">
-          <img src="/icons/camara.png" alt="Comparte tus fotos" className="w-16 h-16" />
+          <img src="/iconos/camara.png" alt="Comparte tus fotos" className="w-16 h-16" />
 
           <h2 className="text-4xl md:text-5xl font-bold text-[#7B4BA3] animate-heartbeat">
             #XVSandraAlicia
