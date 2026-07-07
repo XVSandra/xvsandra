@@ -18,6 +18,7 @@ import { db } from "@/lib/firebase";
 import RSVPForm from "@/components/RSVPForm";
 import ContadorElegante from "@/components/ContadorElegante";
 
+
 export default function Page() {
   const [nombreInvitado, setNombreInvitado] = useState("Invitado especial");
 const [pasesAsignados, setPasesAsignados] = useState(1);
@@ -492,6 +493,7 @@ catch (error: any) {
         {mensajeEnviado && (
           <p className="mt-4 text-green-600 font-semibold">{mensajeEnviado}</p>
         )}
+
       </section>
     </div>
   );

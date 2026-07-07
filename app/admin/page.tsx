@@ -559,6 +559,14 @@ Código de invitación: ${item.codigo}`;
   >
     Descargar CSV
   </button>
+
+<a
+  href="/admin/libro"
+  className="px-5 py-3 rounded-full bg-[#7B4BA3] text-white font-semibold hover:bg-[#B78A25] transition"
+>
+  Libro de visitas
+</a>
+
 </div>
           </div>
         </section>
