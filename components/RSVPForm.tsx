@@ -110,12 +110,13 @@ export default function RSVPForm({
     Confirmación de asistencia
   </h3>
 
-  <p className="mt-3 text-sm md:text-base text-[#6B5A75] leading-relaxed">
-    Agradecemos tu respuesta a más tardar el{" "}
-    <span className="font-bold text-[#B78A25]">
-      31 de julio
-    </span>.
+  <div className="mt-3 text-sm md:text-base text-[#6B5A75] leading-relaxed">
+  <p>Agradecemos tu respuesta a más tardar el</p>
+
+  <p className="font-bold text-[#B78A25] text-xl md:text-2xl mt-1">
+    31 de julio
   </p>
+</div>
 </div>
 
  <div className="text-center bg-[#fff4f8] border border-pink-100 rounded-2xl p-5">

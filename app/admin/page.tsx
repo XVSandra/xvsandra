@@ -465,12 +465,21 @@ const encabezados = [
  const filas = registros.map((item) => {
   const telefonoLimpio = item.telefono.replace(/\D/g, "");
   const linkInvitacion = `${urlBaseInvitacion}/?codigo=${item.codigo}`;
-  const mensaje = `Hola ${item.nombre}, te compartimos tu invitación para los XV años de Sandra Alicia 💖
+  const mensaje = `Hola ${nombre} 💜
+
+Con mucha ilusión te compartimos la invitación a los XV años de Sandra Alicia.
+
+Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
+${linkInvitacion}
+
+Tu código de invitación es: ${codigo}
+
+Agradecemos tu respuesta a más tardar el 31 de julio.`;
 
 Confirma tu asistencia en este link:
 ${linkInvitacion}
 
-Código de invitación: ${item.codigo}`;
+
 
   const linkWhatsApp = telefonoLimpio
     ? `https://wa.me/52${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`
