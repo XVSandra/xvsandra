@@ -385,6 +385,28 @@ const guardarEdicion = async () => {
   }
 };
 
+
+
+const copiarResumen = async () => {
+  const resumen = `Resumen XV Sandra Alicia 💖
+
+Invitados cargados: ${totalInvitados}
+Pases asignados: ${totalPasesAsignados}
+Invitaciones confirmadas: ${totalSiAsisten}
+Personas confirmadas: ${totalConfirmados}
+Pendientes: ${totalPendientes}
+No asistirán: ${totalNoAsisten}
+Avance de confirmación: ${porcentajeConfirmacion}%`;
+
+  try {
+    await navigator.clipboard.writeText(resumen);
+    alert("Resumen copiado correctamente.");
+  } catch (error) {
+    console.error("Error copiando resumen:", error);
+    alert("No se pudo copiar el resumen.");
+  }
+};
+
 const copiarLink = async (codigo: string) => {
   const link = `${urlBaseInvitacion}/?codigo=${codigo}`;
 
@@ -593,6 +615,47 @@ Código de invitación: ${item.codigo}`;
 
         <section className="bg-white rounded-[32px] shadow-lg p-4 md:p-6 mb-6">
           <div className="mb-4">
+
+<section className="bg-white rounded-[32px] shadow-lg p-4 md:p-6 mb-6">
+  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+    <div>
+      <h2 className="text-2xl font-bold text-[#9b355e] mb-3">
+        Resumen rápido
+      </h2>
+
+      <div className="bg-pink-50 border border-pink-100 rounded-2xl p-4 text-sm leading-7 text-gray-700">
+        <p>
+          <strong>Invitados cargados:</strong> {totalInvitados}
+        </p>
+        <p>
+          <strong>Pases asignados:</strong> {totalPasesAsignados}
+        </p>
+        <p>
+          <strong>Invitaciones confirmadas:</strong> {totalSiAsisten}
+        </p>
+        <p>
+          <strong>Personas confirmadas:</strong> {totalConfirmados}
+        </p>
+        <p>
+          <strong>Pendientes:</strong> {totalPendientes}
+        </p>
+        <p>
+          <strong>No asistirán:</strong> {totalNoAsisten}
+        </p>
+        <p>
+          <strong>Avance:</strong> {porcentajeConfirmacion}%
+        </p>
+      </div>
+    </div>
+
+    <button
+      onClick={copiarResumen}
+      className="px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition"
+    >
+      Copiar resumen
+    </button>
+  </div>
+</section>
             <div className="w-full bg-pink-100 rounded-full h-4 overflow-hidden">
               <div
                 className="bg-[#FF3471] h-4 rounded-full transition-all"
