@@ -25,7 +25,6 @@ function calcularTiempo() {
 }
 
 export default function ContadorElegante() {
-  const [montado, setMontado] = useState(false);
   const [tiempo, setTiempo] = useState({
     dias: 0,
     horas: 0,
@@ -34,7 +33,6 @@ export default function ContadorElegante() {
   });
 
   useEffect(() => {
-    setMontado(true);
     setTiempo(calcularTiempo());
 
     const intervalo = setInterval(() => {
@@ -44,16 +42,6 @@ export default function ContadorElegante() {
     return () => clearInterval(intervalo);
   }, []);
 
-  if (!montado) {
-    return (
-      <section className="py-12 text-center relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#FF3471] mb-8">
-          Cuenta regresiva
-        </h2>
-      </section>
-    );
-  }
-
   const items = [
     { label: "Días", value: tiempo.dias },
     { label: "Horas", value: tiempo.horas },
@@ -62,24 +50,36 @@ export default function ContadorElegante() {
   ];
 
   return (
-    <section className="py-12 text-center relative z-10" data-aos="fade-up">
-      <h2 className="text-3xl md:text-4xl font-bold text-[#FF3471] mb-8">
-        Cuenta regresiva
+    <div className="text-center relative z-10">
+      <h2
+        className="text-3xl md:text-4xl font-bold text-[#7B4BA3] mb-8"
+        style={{ fontFamily: "'Quicksand', sans-serif" }}
+      >
+        ¡Prepárate!
       </h2>
 
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
         {items.map((item) => (
           <div
             key={item.label}
-            className="bg-white rounded-2xl shadow-lg px-6 py-5 min-w-[110px]"
+            className="bg-white/85 backdrop-blur-md rounded-3xl shadow-lg border border-[#E8C45C]/50 px-4 py-6"
           >
-            <p className="text-3xl font-bold text-[#FEA201]">
+            <p
+              className="text-4xl md:text-5xl font-bold text-[#B78A25]"
+              style={{ fontFamily: "'Quicksand', sans-serif" }}
+            >
               {String(item.value).padStart(2, "0")}
             </p>
-            <p className="text-sm text-gray-600">{item.label}</p>
+
+            <p
+              className="text-lg md:text-xl text-[#4B3561] font-semibold mt-2"
+              style={{ fontFamily: "'Quicksand', sans-serif" }}
+            >
+              {item.label}
+            </p>
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

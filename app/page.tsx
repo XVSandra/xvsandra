@@ -1,13 +1,17 @@
 "use client";
 
-import "@fontsource/playfair-display/900.css";
+import "@fontsource/great-vibes";
+import "@fontsource/quicksand/400.css";
+import "@fontsource/quicksand/500.css";
+import "@fontsource/quicksand/600.css";
+import "@fontsource/quicksand/700.css";
 import "aos/dist/aos.css";
 
 import AOS from "aos";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Howl } from "howler";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { obtenerInvitado } from "@/lib/firestoreRest";
 
 import { db } from "@/lib/firebase";
@@ -116,19 +120,22 @@ catch (error: any) {
   };
 
   return (
-    <div className="relative text-gray-800 font-sans scroll-smooth bg-animate overflow-hidden">
+    <div
+      className="relative text-[#4B3561] text-lg md:text-xl font-medium scroll-smooth overflow-hidden min-h-screen bg-gradient-to-b from-[#FFF7EC] via-[#F7E9FF] to-[#FFF7EC]"
+      style={{ fontFamily: "'Quicksand', sans-serif" }}
+    >
       <div className="absolute inset-0 pointer-events-none z-0">
         <img
           src="/images/flores-orilla.png"
           alt="Decoración floral"
-          className="w-full h-full object-cover opacity-10"
+          className="w-full h-full object-cover opacity-15"
         />
       </div>
 
       <Toaster position="top-center" reverseOrder={false} />
 
       <button
-        className="fixed top-4 right-4 bg-[#FFD44A] text-white rounded-full shadow p-3 z-50 hover:bg-[#FEA201] transition"
+        className="fixed top-4 right-4 bg-[#E8C45C] text-[#4B3561] rounded-full shadow-lg p-3 z-50 hover:bg-[#7B4BA3] hover:text-white transition"
         onClick={toggleMusica}
       >
         {sonando ? "⏸️" : "▶️"}
@@ -138,33 +145,36 @@ catch (error: any) {
   className="min-h-screen bg-cover bg-[center_top] justify-between items-center text-white p-6 relative"
   style={{ backgroundImage: "url('/images/portada.jpg')" }}
 >
-  <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50"></div>
+  <div className="absolute inset-0 bg-gradient-to-b from-[#2B1746]/45 via-[#7B4BA3]/20 to-[#2B1746]/65"></div>
 
         <div className="relative w-full flex flex-col justify-between items-center min-h-screen py-10">
           <div className="text-center mt-10" data-aos="fade-down">
-            <h1 className="text-5xl md:text-7xl font-bold drop-shadow-lg">
+            <h1
+              className="text-6xl md:text-8xl font-normal drop-shadow-lg text-[#F8E7A1]"
+              style={{ fontFamily: "'Great Vibes', cursive" }}
+            >
               Mis XV Años
             </h1>
           </div>
 <div className="text-center mb-12" data-aos="fade-up">
-  <p className="uppercase tracking-[0.35em] text-sm md:text-base text-white/90 mb-4">
+  <p className="uppercase tracking-[0.32em] text-base md:text-xl text-[#FFF7EC]/90 mb-4 font-semibold">
     15 de agosto 2026
   </p>
 
   <h2
-    className="text-5xl md:text-8xl drop-shadow-lg text-[#FFD44A]"
-    style={{ fontFamily: "Playfair Display, serif", fontWeight: 900 }}
+    className="text-6xl md:text-9xl drop-shadow-lg text-[#F8E7A1]"
+    style={{ fontFamily: "'Great Vibes', cursive" }}
   >
     Sandra Alicia
   </h2>
 
-  <div className="mt-4 w-24 h-1 mx-auto rounded-full bg-[#FFD44A]"></div>
+  <div className="mt-4 w-28 h-1 mx-auto rounded-full bg-[#F8E7A1]"></div>
 </div>
         </div>
       </section>
 
       <section
-        className="bg-white shadow-lg rounded-2xl ring-1 ring-gray-200 my-16 mx-4 md:mx-16 text-center py-16 px-6 relative z-10"
+        className="bg-[#FFF7EC]/90 shadow-xl rounded-[2rem] ring-1 ring-[#E8C45C]/40 my-16 mx-4 md:mx-16 text-center py-16 px-6 relative z-10 backdrop-blur"
         data-aos="zoom-in"
       >
         <div className="flex justify-center mt-4 mb-2">
@@ -175,31 +185,50 @@ catch (error: any) {
           />
         </div>
       </section>
+<section
+  className="text-center py-16 px-6 relative z-10"
+  data-aos="fade-up"
+>
+  <div className="max-w-4xl mx-auto rounded-[2rem] bg-white/75 backdrop-blur-md border border-[#E8C45C]/50 shadow-xl px-6 py-12 md:px-12">
 
-      <section className="text-center py-10 relative z-10" data-aos="fade-up">
-        <div className="flex flex-col items-center">
-          <div className="w-24 h-1 bg-[#FFD44A] rounded-full"></div>
+    <p
+      className="uppercase tracking-[0.35em] text-[#B78A25] text-sm md:text-base font-bold mb-4"
+      style={{ fontFamily: "'Quicksand', sans-serif" }}
+    >
+      Reserva la fecha
+    </p>
 
-          <p
-            className="text-[70px] md:text-[110px] text-[#FF3471] leading-none font-[900]"
-            style={{ fontFamily: "Playfair Display, serif" }}
-          >
-            15/AGO
-          </p>
-          <p
-            className="text-[70px] md:text-[110px] text-[#FEA201] leading-none font-[900]"
-            style={{ fontFamily: "Playfair Display, serif" }}
-          >
-            2026
-          </p>
+    <div className="w-24 h-1 bg-[#E8C45C] rounded-full mx-auto mb-6"></div>
 
-          <div className="w-24 h-1 bg-[#FFD44A] rounded-full"></div>
-        </div>
-      </section>
+    <h2
+      className="text-[52px] md:text-[88px] text-[#7B4BA3] leading-none font-bold"
+      style={{ fontFamily: "'Quicksand', sans-serif" }}
+    >
+      15 de agosto
+    </h2>
 
-      <ContadorElegante />
+    <p
+      className="text-[46px] md:text-[76px] text-[#B78A25] leading-none font-bold mt-2"
+      style={{ fontFamily: "'Quicksand', sans-serif" }}
+    >
+      2026
+    </p>
 
-      <section className="relative py-20 bg-[#7C8C74] text-white text-center overflow-hidden z-10">
+ 
+    <div className="w-24 h-1 bg-[#E8C45C] rounded-full mx-auto mt-8 mb-10"></div>
+
+    <p
+      className="text-2xl md:text-3xl text-[#7B4BA3] font-bold mb-6"
+      style={{ fontFamily: "'Quicksand', sans-serif" }}
+    >
+      Falta muy poco para celebrar juntos
+    </p>
+
+    <ContadorElegante />
+  </div>
+</section>
+
+      <section className="relative py-20 bg-[#6F3FA0] text-white text-center overflow-hidden z-10">
         <div className="absolute top-0 left-0 w-full z-20 pointer-events-none">
           <svg
             viewBox="0 0 1440 320"
@@ -207,34 +236,37 @@ catch (error: any) {
             preserveAspectRatio="none"
           >
             <path
-              fill="#6D8063"
+              fill="#5A2E82"
               d="M0,64L48,74.7C96,85,192,107,288,122.7C384,139,480,149,576,138.7C672,128,768,96,864,85.3C960,75,1056,85,1152,106.7C1248,128,1344,160,1392,176L1440,192L1440,0L0,0Z"
             />
           </svg>
         </div>
 
         <div className="py-20 px-6">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+          <h2
+            className="text-5xl md:text-7xl font-normal text-[#F8E7A1] mb-8"
+            style={{ fontFamily: "'Great Vibes', cursive" }}
+          >
             Con mucho amor me acompañan
           </h2>
 
-          <div className="max-w-2xl mx-auto text-lg md:text-xl space-y-12">
+          <div className="max-w-2xl mx-auto text-xl md:text-2xl space-y-12">
             <div data-aos="fade-up" data-aos-delay="100">
-              <p className="font-semibold text-[#FFD44A] mb-2">Mis Padres:</p>
-              <div className="w-40 h-0.5 bg-[#FFD44A] mx-auto my-4 rounded-full"></div>
+              <p className="font-semibold text-[#F8E7A1] mb-2">Mis Padres:</p>
+              <div className="w-40 h-0.5 bg-[#F8E7A1] mx-auto my-4 rounded-full"></div>
               <p>Sandra Angelina Ruiz Paredes</p>
               <p>Adrián Valenzuela Barajas</p>
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200" className="mt-8">
-              <p className="font-semibold text-[#FFD44A] mb-2">Mis Padrinos:</p>
-              <div className="w-40 h-0.5 bg-[#FFD44A] mx-auto my-4 rounded-full"></div>
+              <p className="font-semibold text-[#F8E7A1] mb-2">Mis Padrinos:</p>
+              <div className="w-40 h-0.5 bg-[#F8E7A1] mx-auto my-4 rounded-full"></div>
               <p>Rocio Ruiz Paredes</p>
               <p>Rogelio Ruiz Paredes</p>
             </div>
 
             <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
-              <p className="text-[#FFD44A] font-semibold text-xl">
+              <p className="text-[#F8E7A1] font-semibold text-2xl">
                 ¡Acompáñame tú también a celebrar este momento tan especial lleno de amor, alegría y sueños cumplidos!
               </p>
             </div>
@@ -248,7 +280,7 @@ catch (error: any) {
             preserveAspectRatio="none"
           >
             <path
-              fill="#6D8063"
+              fill="#5A2E82"
               d="M0,64L48,74.7C96,85,192,107,288,122.7C384,139,480,149,576,138.7C672,128,768,96,864,85.3C960,75,1056,85,1152,106.7C1248,128,1344,160,1392,176L1440,192L1440,0L0,0Z"
             />
           </svg>
@@ -256,28 +288,31 @@ catch (error: any) {
       </section>
 
       <section className="py-20 px-6 text-center relative z-10" data-aos="fade-up">
-        <h2 className="text-3xl md:text-5xl font-bold text-[#FF3471] mb-8">
+        <h2
+          className="text-5xl md:text-7xl font-normal text-[#7B4BA3] mb-8"
+          style={{ fontFamily: "'Great Vibes', cursive" }}
+        >
           Detalles del Evento
         </h2>
 
-        <div className="max-w-3xl mx-auto space-y-10 text-lg md:text-xl">
+        <div className="max-w-3xl mx-auto space-y-10 text-xl md:text-2xl">
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="100">
             <img src="/icons/ubicacion.png" alt="Ubicación" className="w-10 h-10 mb-4" />
-            <p className="font-semibold text-[#FEA201]">Salón Palladium</p>
-            <p>RBlvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
+            <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
+            <p>Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
           </div>
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="200">
             <img
               src="/images/jardin-miniatura.jpg"
-              alt="Jardín Magno"
+              alt="Palladium"
               className="rounded-lg shadow-lg w-72 h-auto object-cover"
             />
             <a
               href="https://maps.app.goo.gl/4cgn53V6EUYMUF6E9"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block bg-[#FEA201] text-white px-6 py-2 rounded-full shadow hover:bg-[#FF3471] transition"
+              className="mt-4 inline-block bg-[#7B4BA3] text-white px-8 py-3 rounded-full shadow hover:bg-[#E8C45C] hover:text-[#4B3561] transition text-lg md:text-xl font-semibold"
             >
               Ver ubicación en Google Maps
             </a>
@@ -285,75 +320,83 @@ catch (error: any) {
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="300">
             <img src="/icons/vestimenta.png" alt="Código de vestimenta" className="w-10 h-10 mb-4" />
-            <p className="font-semibold text-[#FEA201]">Código de vestimenta:</p>
+            <p className="font-semibold text-[#B78A25]">Código de vestimenta:</p>
             <p>Formal</p>
           </div>
 
           <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
             <img src="/icons/obsequio.png" alt="Obsequios" className="w-10 h-10 mb-4" />
-            <p className="font-semibold text-[#FEA201]">Obsequios:</p>
+            <p className="font-semibold text-[#B78A25]">Obsequios:</p>
             <p>Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo, tendremos lluvia de sobres.</p>
           </div>
         </div>
       </section>
 
       <section className="py-16 px-6 text-center relative z-10" data-aos="fade-up">
-        <h2 className="text-3xl font-bold text-[#FF3471] mb-10">Itinerario</h2>
+        <h2
+          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-10"
+          style={{ fontFamily: "'Great Vibes', cursive" }}
+        >
+          Itinerario
+        </h2>
 
         <div className="relative w-3/4 md:w-1/2 mx-auto">
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full border-l-2 border-[#FF3471]"></div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full border-l-2 border-[#C7A4E0]"></div>
 
           <div className="flex flex-col space-y-10">
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">7:00 PM</div>
-              <div className="w-1/2 text-left pl-4 text-lg">Recepción</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">7:00 PM</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Recepción</div>
             </div>
 
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">7:45 PM</div>
-              <div className="w-1/2 text-left pl-4 text-lg">Vals</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">7:45 PM</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Vals</div>
             </div>
 
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">8:15 PM</div>
-              <div className="w-1/2 text-left pl-4 text-lg">Brindis</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">8:15 PM</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Brindis</div>
             </div>
 
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">8:30 PM</div>
-              <div className="w-1/2 text-left pl-4 text-lg">Cena</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">8:30 PM</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Cena</div>
             </div>
 
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">9:00 PM</div>
-              <div className="w-1/2 text-left pl-4 text-lg">Fotos</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">9:00 PM</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Fotos</div>
             </div>
 
             <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-lg font-semibold">Fiesta</div>
-              <div className="w-1/2 text-left pl-4 text-lg">¡A bailar y disfrutar!</div>
+              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">Fiesta</div>
+              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">¡A bailar y disfrutar!</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 text-center bg-white relative z-10" data-aos="fade-up">
+      <section className="py-16 px-6 text-center bg-[#FFF7EC]/90 relative z-10" data-aos="fade-up">
         <div className="flex flex-col items-center space-y-6">
           <img src="/icons/camara.png" alt="Comparte tus fotos" className="w-16 h-16" />
 
-          <h2 className="text-4xl md:text-5xl font-bold text-[#FF3471] animate-heartbeat">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#7B4BA3] animate-heartbeat">
             #XVSandraAlicia
           </h2>
 
-          <p className="max-w-2xl text-lg md:text-xl text-gray-700">
+          <p className="max-w-2xl text-xl md:text-2xl text-[#4B3561]">
             Comparte con nosotros tus fotos del evento usando el hashtag{" "}
-            <span className="font-semibold text-[#FEA201]">#XVSandraAlicia</span>.
+            <span className="font-semibold text-[#B78A25]">#XVSandraAlicia</span>.
           </p>
         </div>
       </section>
 
       <section className="py-16 px-6 text-center relative z-10" data-aos="zoom-in-up">
-        <h2 className="text-4xl font-bold text-[#FF3471] mb-4">
+        <h2
+          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-4"
+          style={{ fontFamily: "'Great Vibes', cursive" }}
+        >
           ¿Podrás acompañarme en este día tan especial?
         </h2>
       </section>
@@ -368,14 +411,19 @@ catch (error: any) {
       </section>
 
       <section className="py-16 text-center relative z-10" data-aos="fade-up">
-        <h2 className="text-3xl font-bold text-[#FEA201] mb-4">Libro de visitas</h2>
+        <h2
+          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-4"
+          style={{ fontFamily: "'Great Vibes', cursive" }}
+        >
+          Libro de visitas
+        </h2>
 
-        <p className="mb-4">Déjame un mensajito bonito 🥰</p>
+        <p className="mb-4 text-xl md:text-2xl">Déjame un mensajito bonito 🥰</p>
 
         <textarea
           value={mensajeLibro}
           onChange={(e) => setMensajeLibro(e.target.value)}
-          className="w-3/4 md:w-1/2 h-32 p-4 rounded border-2 border-[#FE9BBA] bg-white"
+          className="w-3/4 md:w-1/2 h-36 p-5 rounded-2xl border-2 border-[#C7A4E0] bg-white/90 text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-[#E8C45C]"
           placeholder="Escribe tu mensaje aquí..."
         ></textarea>
 
@@ -383,7 +431,7 @@ catch (error: any) {
 
         <button
           onClick={enviarMensajeLibro}
-          className="mt-4 bg-[#FF3471] text-white px-6 py-2 rounded-full hover:bg-[#FEA201]"
+          className="mt-4 bg-[#7B4BA3] text-white px-8 py-3 rounded-full hover:bg-[#E8C45C] hover:text-[#4B3561] transition text-lg md:text-xl font-semibold"
         >
           Enviar mensaje
         </button>

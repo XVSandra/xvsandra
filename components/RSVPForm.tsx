@@ -166,7 +166,8 @@ export default function RSVPForm({
       <button
         type="submit"
         disabled={enviando}
-        className="w-full luxury-button py-3 rounded-full font-semibold disabled:opacity-60"
+       // className="w-full luxury-button py-3 rounded-full font-semibold disabled:opacity-60"//
+ className="mt-4 bg-[#7B4BA3] text-white px-8 py-3 rounded-full hover:bg-[#E8C45C] hover:text-[#4B3561] transition text-lg md:text-xl font-semibold"
       >
         {enviando
           ? "Guardando..."
