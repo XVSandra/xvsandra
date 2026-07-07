@@ -55,6 +55,8 @@ const [filtroEstado, setFiltroEstado] = useState<
   "Todos" | "Confirmado" | "Pendiente" | "No asistirá"
 >("Todos");
 
+const [busqueda, setBusqueda] = useState("");
+
   const cargarDatos = async () => {
     try {
       setCargando(true);
@@ -125,11 +127,21 @@ const [filtroEstado, setFiltroEstado] = useState<
       .sort((a, b) => a.codigo.localeCompare(b.codigo));
   }, [invitados, confirmaciones]);
 
- const registrosFiltrados =
-  filtroEstado === "Todos"
-    ? registros
-    : registros.filter((item) => item.estado === filtroEstado);
+const registrosFiltrados = registros.filter((item) => {
+  const coincideEstado =
+    filtroEstado === "Todos" || item.estado === filtroEstado;
 
+  const textoBusqueda = busqueda.toLowerCase().trim();
+
+  const coincideBusqueda =
+    !textoBusqueda ||
+    item.codigo.toLowerCase().includes(textoBusqueda) ||
+    item.nombre.toLowerCase().includes(textoBusqueda) ||
+    item.telefono.toLowerCase().includes(textoBusqueda) ||
+    item.grupo.toLowerCase().includes(textoBusqueda);
+
+  return coincideEstado && coincideBusqueda;
+});
  const totalInvitados = registros.length;
 
   const totalPasesAsignados = registros.reduce(
@@ -379,6 +391,16 @@ Código de invitación: ${item.codigo}`;
     <h2 className="text-2xl font-bold text-[#9b355e]">
       Detalle por invitado
     </h2>
+
+
+<input
+  type="text"
+  value={busqueda}
+  onChange={(e) => setBusqueda(e.target.value)}
+  placeholder="Buscar por nombre, código, teléfono o grupo..."
+  className="w-full md:w-80 border border-pink-200 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-[#FF3471]/30 text-sm"
+/>
+
 
     <div className="flex flex-wrap gap-2">
       {(["Todos", "Confirmado", "Pendiente", "No asistirá"] as const).map(
