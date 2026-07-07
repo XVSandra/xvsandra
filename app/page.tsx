@@ -185,18 +185,47 @@ catch (error: any) {
         </div>
       </section>
 
-      <section
-        className="bg-[#FFF7EC]/90 shadow-xl rounded-[2rem] ring-1 ring-[#E8C45C]/40 my-16 mx-4 md:mx-16 text-center py-16 px-6 relative z-10 backdrop-blur"
-        data-aos="zoom-in"
-      >
-        <div className="flex justify-center mt-4 mb-2">
-          <img
-            src="/images/crown.png"
-            alt="Corona"
-            className="w-52 md:w-60 h-auto"
-          />
-        </div>
-      </section>
+    <section
+  className="relative overflow-hidden bg-white/90 shadow-xl rounded-[36px] ring-1 ring-purple-100 my-16 mx-4 md:mx-16 text-center py-16 px-6"
+  data-aos="zoom-in"
+>
+  {/* Decoración suave superior */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-[#B78A25] to-transparent" />
+
+  <div className="max-w-4xl mx-auto">
+    <div className="flex justify-center mb-6">
+      <img
+        src="/images/crown.png"
+        alt="Corona decorativa"
+        className="w-80 md:w-96 h-auto drop-shadow-md"
+      />
+    </div>
+
+    <div className="flex items-center justify-center gap-4 mb-8">
+      <span className="h-px w-16 md:w-28 bg-[#B78A25]/60" />
+      <span className="text-[#B78A25] text-2xl">✦</span>
+      <span className="h-px w-16 md:w-28 bg-[#B78A25]/60" />
+    </div>
+
+    <p
+      className="font-['Great_Vibes'] text-4xl md:text-6xl text-[#7B4BA3] leading-tight max-w-3xl mx-auto"
+    >
+      Cada farol ilumina un sueño,
+      <br />
+      cada sueño un nuevo comienzo.
+    </p>
+
+    <p className="mt-6 text-lg md:text-2xl text-[#6B5A75] leading-relaxed max-w-3xl mx-auto italic">
+      Acompáñame a celebrar la noche en que mi luz brillará más que nunca.
+    </p>
+
+    <div className="flex items-center justify-center gap-4 mt-10">
+      <span className="h-px w-16 md:w-28 bg-[#B78A25]/60" />
+      <span className="text-[#B78A25] text-2xl">✦</span>
+      <span className="h-px w-16 md:w-28 bg-[#B78A25]/60" />
+    </div>
+  </div>
+</section>
 <section
   className="text-center py-16 px-6 relative z-10"
   data-aos="fade-up"
