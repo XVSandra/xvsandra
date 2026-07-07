@@ -107,14 +107,14 @@ export default function RSVPForm({
     >
       <div className="text-center bg-[#fff4f8] border border-pink-100 rounded-2xl p-5">
         <p className="text-sm text-gray-600">Invitación para</p>
-        <p className="text-2xl font-bold text-[#FF3471]">
+        <p className="text-2xl font-bold text-[#7B4BA3]">
           {nombreInvitado}
         </p>
       </div>
 
       <div className="bg-[#fff4f8] border border-pink-100 rounded-2xl p-4 text-center">
         <p className="text-sm text-gray-600">Pases asignados</p>
-        <p className="text-3xl font-bold text-[#FF3471]">
+        <p className="text-3xl font-bold text-[#B78A25]">
           {pasesAsignados}
         </p>
       </div>
@@ -163,18 +163,17 @@ export default function RSVPForm({
         </select>
       </div>
 
-      <button
-        type="submit"
-        disabled={enviando}
-       // className="w-full luxury-button py-3 rounded-full font-semibold disabled:opacity-60"//
- className="mt-4 bg-[#7B4BA3] text-white px-8 py-3 rounded-full hover:bg-[#E8C45C] hover:text-[#4B3561] transition text-lg md:text-xl font-semibold"
-      >
-        {enviando
-          ? "Guardando..."
-          : confirmacionExistente
-          ? "Actualizar confirmación"
-          : "Enviar confirmación"}
-      </button>
+     <button
+  type="submit"
+  disabled={enviando}
+  className="block mx-auto px-10 py-3 rounded-full bg-[#7B4BA3] text-white font-semibold hover:bg-[#E8C45C] hover:text-[#4B3561] transition disabled:opacity-60"
+>
+  {enviando
+    ? "Guardando..."
+    : confirmacionExistente
+    ? "Actualizar confirmación"
+    : "Enviar confirmación"}
+</button>
     </form>
   );
 }
