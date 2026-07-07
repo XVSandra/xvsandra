@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -72,6 +73,13 @@ const [nuevoPases, setNuevoPases] = useState(1);
 const [nuevoTelefono, setNuevoTelefono] = useState("");
 const [nuevoGrupo, setNuevoGrupo] = useState("");
 const [guardandoNuevo, setGuardandoNuevo] = useState(false);
+
+const [confirmandoCodigo, setConfirmandoCodigo] = useState("");
+const [confirmandoNombre, setConfirmandoNombre] = useState("");
+const [confirmandoPases, setConfirmandoPases] = useState(1);
+const [confirmandoAsistencia, setConfirmandoAsistencia] = useState("Sí asistiré");
+const [confirmandoCantidad, setConfirmandoCantidad] = useState(1);
+const [guardandoConfirmacion, setGuardandoConfirmacion] = useState(false);
 
   const cargarDatos = async () => {
     try {
@@ -188,6 +196,61 @@ const registrosFiltrados = registros.filter((item) => {
       : 0;
 
 
+const iniciarConfirmacionManual = (item: RegistroAdmin) => {
+  setConfirmandoCodigo(item.codigo);
+  setConfirmandoNombre(item.nombre);
+  setConfirmandoPases(item.pases);
+  setConfirmandoAsistencia(
+    item.asistencia === "No asistiré" ? "No asistiré" : "Sí asistiré"
+  );
+  setConfirmandoCantidad(item.cantidadConfirmada > 0 ? item.cantidadConfirmada : 1);
+};
+
+const cancelarConfirmacionManual = () => {
+  setConfirmandoCodigo("");
+  setConfirmandoNombre("");
+  setConfirmandoPases(1);
+  setConfirmandoAsistencia("Sí asistiré");
+  setConfirmandoCantidad(1);
+};
+
+const guardarConfirmacionManual = async () => {
+  if (!confirmandoCodigo) return;
+
+  if (
+    confirmandoAsistencia === "Sí asistiré" &&
+    (confirmandoCantidad < 1 || confirmandoCantidad > confirmandoPases)
+  ) {
+    alert(`La cantidad debe estar entre 1 y ${confirmandoPases}.`);
+    return;
+  }
+
+  try {
+    setGuardandoConfirmacion(true);
+
+    await setDoc(doc(db, "confirmaciones", confirmandoCodigo), {
+      codigo: confirmandoCodigo,
+      nombre: confirmandoNombre,
+      asistencia: confirmandoAsistencia,
+      pasesAsignados: confirmandoPases,
+      cantidadConfirmada:
+        confirmandoAsistencia === "No asistiré" ? 0 : confirmandoCantidad,
+      fechaConfirmacion: new Date(),
+      capturadoPorAdmin: true,
+    });
+
+    await cargarDatos();
+    cancelarConfirmacionManual();
+
+    alert("Confirmación registrada correctamente.");
+  } catch (error) {
+    console.error("Error guardando confirmación manual:", error);
+    alert("No se pudo guardar la confirmación.");
+  } finally {
+    setGuardandoConfirmacion(false);
+  }
+};
+
 const guardarNuevoInvitado = async () => {
   const codigoLimpio = nuevoCodigo.trim().toUpperCase();
 
@@ -244,6 +307,28 @@ const guardarNuevoInvitado = async () => {
     setGuardandoNuevo(false);
   }
 };
+
+
+const eliminarInvitado = async (item: RegistroAdmin) => {
+  const confirmar = confirm(
+    `¿Seguro que deseas eliminar a ${item.nombre}?\n\nCódigo: ${item.codigo}\n\nEsta acción también eliminará su confirmación si existe.`
+  );
+
+  if (!confirmar) return;
+
+  try {
+    await deleteDoc(doc(db, "invitados", item.codigo));
+    await deleteDoc(doc(db, "confirmaciones", item.codigo));
+
+    await cargarDatos();
+
+    alert("Invitado eliminado correctamente.");
+  } catch (error) {
+    console.error("Error eliminando invitado:", error);
+    alert("No se pudo eliminar el invitado.");
+  }
+};
+
 
 const iniciarEdicion = (item: RegistroAdmin) => {
   setEditandoCodigo(item.codigo);
@@ -578,7 +663,11 @@ Código de invitación: ${item.codigo}`;
                     <th className="p-3 text-left">Fecha</th>
                     <th className="p-3 text-left">Link</th>
                     <th className="p-3 text-left">WhatsApp</th>
+
+<th className="p-3 text-left">Confirmar</th>
 <th className="p-3 text-left">Editar</th>
+<th className="p-3 text-left">Eliminar</th>
+
                   </tr>
                 </thead>
 
@@ -633,6 +722,16 @@ Código de invitación: ${item.codigo}`;
     WhatsApp
   </button>
 </td>
+
+<td className="p-3">
+  <button
+    onClick={() => iniciarConfirmacionManual(item)}
+    className="px-3 py-2 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition"
+  >
+    Confirmar
+  </button>
+</td>
+
 <td className="p-3">
   <button
     onClick={() => iniciarEdicion(item)}
@@ -641,6 +740,17 @@ Código de invitación: ${item.codigo}`;
     Editar
   </button>
 </td>
+
+<td className="p-3">
+  <button
+    onClick={() => eliminarInvitado(item)}
+    className="px-3 py-2 rounded-full bg-red-50 text-red-700 text-xs font-semibold hover:bg-red-100 transition"
+  >
+    Eliminar
+  </button>
+</td>
+
+
                     </tr>
 
 
@@ -651,6 +761,87 @@ Código de invitación: ${item.codigo}`;
             </div>
           )}
         </section>
+
+{confirmandoCodigo && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div className="bg-white rounded-[28px] shadow-xl p-6 w-full max-w-lg">
+      <h3 className="text-2xl font-bold text-[#FF3471] mb-2">
+        Confirmación manual
+      </h3>
+
+      <p className="text-sm text-gray-500 mb-5">
+        Invitado: <strong>{confirmandoNombre}</strong>
+        <br />
+        Código: <strong>{confirmandoCodigo}</strong>
+        <br />
+        Pases asignados: <strong>{confirmandoPases}</strong>
+      </p>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Asistencia
+          </label>
+
+          <select
+            value={confirmandoAsistencia}
+            onChange={(e) => {
+              setConfirmandoAsistencia(e.target.value);
+              setConfirmandoCantidad(e.target.value === "No asistiré" ? 0 : 1);
+            }}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          >
+            <option>Sí asistiré</option>
+            <option>No asistiré</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Cantidad confirmada
+          </label>
+
+          <select
+            value={confirmandoCantidad}
+            onChange={(e) => setConfirmandoCantidad(Number(e.target.value))}
+            disabled={confirmandoAsistencia === "No asistiré"}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30 disabled:bg-gray-100"
+          >
+            {confirmandoAsistencia === "No asistiré" ? (
+              <option value={0}>0</option>
+            ) : (
+              Array.from({ length: confirmandoPases }, (_, i) => i + 1).map(
+                (num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                )
+              )
+            )}
+          </select>
+        </div>
+      </div>
+
+      <div className="flex gap-3 mt-6">
+        <button
+          onClick={cancelarConfirmacionManual}
+          className="flex-1 px-5 py-3 rounded-full border border-gray-300 text-gray-600 font-semibold hover:bg-gray-50 transition"
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={guardarConfirmacionManual}
+          disabled={guardandoConfirmacion}
+          className="flex-1 px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition disabled:opacity-60"
+        >
+          {guardandoConfirmacion ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
 
 {creandoInvitado && (
