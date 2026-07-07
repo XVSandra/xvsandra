@@ -4,9 +4,11 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   collection,
+  doc,
   getDocs,
   orderBy,
   query,
+  setDoc,
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -56,6 +58,13 @@ const [filtroEstado, setFiltroEstado] = useState<
 >("Todos");
 
 const [busqueda, setBusqueda] = useState("");
+
+const [editandoCodigo, setEditandoCodigo] = useState("");
+const [editandoNombre, setEditandoNombre] = useState("");
+const [editandoPases, setEditandoPases] = useState(1);
+const [editandoTelefono, setEditandoTelefono] = useState("");
+const [editandoGrupo, setEditandoGrupo] = useState("");
+const [guardandoEdicion, setGuardandoEdicion] = useState(false);
 
   const cargarDatos = async () => {
     try {
@@ -171,6 +180,61 @@ const registrosFiltrados = registros.filter((item) => {
       ? Math.round(((totalSiAsisten + totalNoAsisten) / totalInvitados) * 100)
       : 0;
 
+
+const iniciarEdicion = (item: RegistroAdmin) => {
+  setEditandoCodigo(item.codigo);
+  setEditandoNombre(item.nombre);
+  setEditandoPases(item.pases);
+  setEditandoTelefono(item.telefono);
+  setEditandoGrupo(item.grupo);
+};
+
+const cancelarEdicion = () => {
+  setEditandoCodigo("");
+  setEditandoNombre("");
+  setEditandoPases(1);
+  setEditandoTelefono("");
+  setEditandoGrupo("");
+};
+
+const guardarEdicion = async () => {
+  if (!editandoCodigo) return;
+
+  if (!editandoNombre.trim()) {
+    alert("El nombre no puede estar vacío.");
+    return;
+  }
+
+  if (editandoPases < 1) {
+    alert("Los pases deben ser mínimo 1.");
+    return;
+  }
+
+  try {
+    setGuardandoEdicion(true);
+
+    await setDoc(
+      doc(db, "invitados", editandoCodigo),
+      {
+        nombre: editandoNombre.trim(),
+        pases: Number(editandoPases),
+        telefono: editandoTelefono.trim(),
+        grupo: editandoGrupo.trim(),
+        actualizadoEn: new Date(),
+      },
+      { merge: true }
+    );
+
+    await cargarDatos();
+    cancelarEdicion();
+    alert("Invitado actualizado correctamente.");
+  } catch (error) {
+    console.error("Error actualizando invitado:", error);
+    alert("No se pudo actualizar el invitado.");
+  } finally {
+    setGuardandoEdicion(false);
+  }
+};
 
 const copiarLink = async (codigo: string) => {
   const link = `${urlBaseInvitacion}/?codigo=${codigo}`;
@@ -443,6 +507,7 @@ Código de invitación: ${item.codigo}`;
                     <th className="p-3 text-left">Fecha</th>
                     <th className="p-3 text-left">Link</th>
                     <th className="p-3 text-left">WhatsApp</th>
+<th className="p-3 text-left">Editar</th>
                   </tr>
                 </thead>
 
@@ -497,7 +562,14 @@ Código de invitación: ${item.codigo}`;
     WhatsApp
   </button>
 </td>
-
+<td className="p-3">
+  <button
+    onClick={() => iniciarEdicion(item)}
+    className="px-3 py-2 rounded-full bg-yellow-50 text-yellow-700 text-xs font-semibold hover:bg-yellow-100 transition"
+  >
+    Editar
+  </button>
+</td>
                     </tr>
 
 
@@ -508,6 +580,93 @@ Código de invitación: ${item.codigo}`;
             </div>
           )}
         </section>
+
+
+{editandoCodigo && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div className="bg-white rounded-[28px] shadow-xl p-6 w-full max-w-lg">
+      <h3 className="text-2xl font-bold text-[#FF3471] mb-2">
+        Editar invitado
+      </h3>
+
+      <p className="text-sm text-gray-500 mb-5">
+        Código: <strong>{editandoCodigo}</strong>
+      </p>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Nombre
+          </label>
+          <input
+            type="text"
+            value={editandoNombre}
+            onChange={(e) => setEditandoNombre(e.target.value)}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Pases
+          </label>
+          <input
+            type="number"
+            min={1}
+            value={editandoPases}
+            onChange={(e) => setEditandoPases(Number(e.target.value))}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Teléfono
+          </label>
+          <input
+            type="text"
+            value={editandoTelefono}
+            onChange={(e) => setEditandoTelefono(e.target.value)}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Grupo
+          </label>
+          <input
+            type="text"
+            value={editandoGrupo}
+            onChange={(e) => setEditandoGrupo(e.target.value)}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-3 mt-6">
+        <button
+          onClick={cancelarEdicion}
+          className="flex-1 px-5 py-3 rounded-full border border-gray-300 text-gray-600 font-semibold hover:bg-gray-50 transition"
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={guardarEdicion}
+          disabled={guardandoEdicion}
+          className="flex-1 px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition disabled:opacity-60"
+        >
+          {guardandoEdicion ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
       </div>
        </main>
   </AdminPasswordGate>
