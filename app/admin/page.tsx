@@ -65,6 +65,13 @@ const [editandoPases, setEditandoPases] = useState(1);
 const [editandoTelefono, setEditandoTelefono] = useState("");
 const [editandoGrupo, setEditandoGrupo] = useState("");
 const [guardandoEdicion, setGuardandoEdicion] = useState(false);
+const [creandoInvitado, setCreandoInvitado] = useState(false);
+const [nuevoCodigo, setNuevoCodigo] = useState("");
+const [nuevoNombre, setNuevoNombre] = useState("");
+const [nuevoPases, setNuevoPases] = useState(1);
+const [nuevoTelefono, setNuevoTelefono] = useState("");
+const [nuevoGrupo, setNuevoGrupo] = useState("");
+const [guardandoNuevo, setGuardandoNuevo] = useState(false);
 
   const cargarDatos = async () => {
     try {
@@ -180,6 +187,63 @@ const registrosFiltrados = registros.filter((item) => {
       ? Math.round(((totalSiAsisten + totalNoAsisten) / totalInvitados) * 100)
       : 0;
 
+
+const guardarNuevoInvitado = async () => {
+  const codigoLimpio = nuevoCodigo.trim().toUpperCase();
+
+  if (!codigoLimpio) {
+    alert("El código no puede estar vacío.");
+    return;
+  }
+
+  if (!nuevoNombre.trim()) {
+    alert("El nombre no puede estar vacío.");
+    return;
+  }
+
+  if (nuevoPases < 1) {
+    alert("Los pases deben ser mínimo 1.");
+    return;
+  }
+
+  const yaExiste = invitados.some((item) => item.id === codigoLimpio);
+
+  if (yaExiste) {
+    alert("Ese código ya existe. Usa otro código.");
+    return;
+  }
+
+  try {
+    setGuardandoNuevo(true);
+
+    await setDoc(doc(db, "invitados", codigoLimpio), {
+      nombre: nuevoNombre.trim(),
+      pases: Number(nuevoPases),
+      telefono: nuevoTelefono.trim(),
+      grupo: nuevoGrupo.trim(),
+      notas: "",
+      confirmado: false,
+      creadoEn: new Date(),
+      actualizadoEn: new Date(),
+    });
+
+    setNuevoCodigo("");
+    setNuevoNombre("");
+    setNuevoPases(1);
+    setNuevoTelefono("");
+    setNuevoGrupo("");
+    setCreandoInvitado(false);
+
+    await cargarDatos();
+
+    alert("Invitado creado correctamente.");
+  } catch (error) {
+    console.error("Error creando invitado:", error);
+    alert("No se pudo crear el invitado.");
+  } finally {
+    setGuardandoNuevo(false);
+  }
+};
 
 const iniciarEdicion = (item: RegistroAdmin) => {
   setEditandoCodigo(item.codigo);
@@ -366,22 +430,29 @@ Código de invitación: ${item.codigo}`;
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={cargarDatos}
-                className="px-5 py-3 rounded-full border border-[#FF3471] text-[#FF3471] font-semibold hover:bg-pink-50 transition"
-              >
-                Actualizar
-              </button>
+          <div className="flex flex-wrap gap-3">
+  <button
+    onClick={() => setCreandoInvitado(true)}
+    className="px-5 py-3 rounded-full bg-[#FEA201] text-white font-semibold hover:bg-[#FF3471] transition"
+  >
+    + Nuevo invitado
+  </button>
 
-              <button
-                onClick={descargarCSV}
-                disabled={registros.length === 0}
-                className="px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition disabled:opacity-50"
-              >
-                Descargar CSV
-              </button>
-            </div>
+  <button
+    onClick={cargarDatos}
+    className="px-5 py-3 rounded-full border border-[#FF3471] text-[#FF3471] font-semibold hover:bg-pink-50 transition"
+  >
+    Actualizar
+  </button>
+
+  <button
+    onClick={descargarCSV}
+    disabled={registros.length === 0}
+    className="px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition disabled:opacity-50"
+  >
+    Descargar CSV
+  </button>
+</div>
           </div>
         </section>
 
@@ -580,6 +651,105 @@ Código de invitación: ${item.codigo}`;
             </div>
           )}
         </section>
+
+
+{creandoInvitado && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div className="bg-white rounded-[28px] shadow-xl p-6 w-full max-w-lg">
+      <h3 className="text-2xl font-bold text-[#FF3471] mb-2">
+        Nuevo invitado
+      </h3>
+
+      <p className="text-sm text-gray-500 mb-5">
+        Captura los datos del nuevo invitado.
+      </p>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Código
+          </label>
+          <input
+            type="text"
+            value={nuevoCodigo}
+            onChange={(e) => setNuevoCodigo(e.target.value)}
+            placeholder="Ej. A010"
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Nombre
+          </label>
+          <input
+            type="text"
+            value={nuevoNombre}
+            onChange={(e) => setNuevoNombre(e.target.value)}
+            placeholder="Ej. Familia Pérez"
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Pases
+          </label>
+          <input
+            type="number"
+            min={1}
+            value={nuevoPases}
+            onChange={(e) => setNuevoPases(Number(e.target.value))}
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Teléfono
+          </label>
+          <input
+            type="text"
+            value={nuevoTelefono}
+            onChange={(e) => setNuevoTelefono(e.target.value)}
+            placeholder="Ej. 6861234567"
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-[#9b355e] mb-1">
+            Grupo
+          </label>
+          <input
+            type="text"
+            value={nuevoGrupo}
+            onChange={(e) => setNuevoGrupo(e.target.value)}
+            placeholder="Ej. Familia mamá"
+            className="w-full border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#FF3471]/30"
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-3 mt-6">
+        <button
+          onClick={() => setCreandoInvitado(false)}
+          className="flex-1 px-5 py-3 rounded-full border border-gray-300 text-gray-600 font-semibold hover:bg-gray-50 transition"
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={guardarNuevoInvitado}
+          disabled={guardandoNuevo}
+          className="flex-1 px-5 py-3 rounded-full bg-[#FF3471] text-white font-semibold hover:bg-[#FEA201] transition disabled:opacity-60"
+        >
+          {guardandoNuevo ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
 
 {editandoCodigo && (
