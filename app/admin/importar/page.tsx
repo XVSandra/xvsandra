@@ -4,6 +4,7 @@ import { useState } from "react";
 import * as XLSX from "xlsx";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import AdminPasswordGate from "@/components/admin/AdminPasswordGate";
 
 type InvitadoExcel = {
   codigo: string;
@@ -81,7 +82,9 @@ export default function ImportarInvitadosPage() {
     }
   };
 
+
   return (
+  <AdminPasswordGate>
     <main className="min-h-screen bg-[#fff8fb] text-[#4b2433] p-6">
       <div className="max-w-5xl mx-auto bg-white rounded-[32px] shadow-lg p-6 md:p-8">
         <p className="uppercase tracking-[0.3em] text-xs text-[#9b355e] mb-2">
@@ -161,6 +164,7 @@ export default function ImportarInvitadosPage() {
           </div>
         )}
       </div>
-    </main>
+       </main>
+  </AdminPasswordGate>
   );
 }

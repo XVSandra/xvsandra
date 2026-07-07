@@ -10,6 +10,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import AdminPasswordGate from "@/components/admin/AdminPasswordGate";
 
 type Invitado = {
   id: string;
@@ -269,7 +270,9 @@ Código de invitación: ${item.codigo}`;
   };
 
   return (
+  <AdminPasswordGate>
     <main className="min-h-screen bg-[#fff8fb] text-[#4b2433] p-4 md:p-8">
+
       <div className="max-w-7xl mx-auto">
         <section className="bg-white rounded-[32px] shadow-lg p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -484,6 +487,7 @@ Código de invitación: ${item.codigo}`;
           )}
         </section>
       </div>
-    </main>
+       </main>
+  </AdminPasswordGate>
   );
 }
