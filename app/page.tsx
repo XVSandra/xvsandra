@@ -119,6 +119,15 @@ catch (error: any) {
     setSonando(!sonando);
   };
 
+  const fotosGaleria = [
+    "/images/galeria/foto1.jpg",
+    "/images/galeria/foto2.jpg",
+    "/images/galeria/foto3.jpg",
+    "/images/galeria/foto4.jpg",
+    "/images/galeria/foto5.jpg",
+    "/images/galeria/foto6.jpg",
+  ];
+
   return (
     <div
       className="relative text-[#4B3561] text-lg md:text-xl font-medium scroll-smooth overflow-hidden min-h-screen bg-gradient-to-b from-[#FFF7EC] via-[#F7E9FF] to-[#FFF7EC]"
@@ -373,6 +382,48 @@ catch (error: any) {
               <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">Fiesta</div>
               <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">¡A bailar y disfrutar!</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-6 text-center relative z-10" data-aos="fade-up">
+        <div className="max-w-6xl mx-auto">
+          <p className="uppercase tracking-[0.32em] text-[#B78A25] text-sm md:text-base font-bold mb-3">
+            Recuerdos especiales
+          </p>
+
+          <h2
+            className="text-5xl md:text-7xl font-normal text-[#7B4BA3] mb-4"
+            style={{ fontFamily: "'Great Vibes', cursive" }}
+          >
+            Galería
+          </h2>
+
+          <p className="max-w-2xl mx-auto text-xl md:text-2xl text-[#4B3561] mb-10">
+            Un pedacito de mi historia antes de celebrar esta noche tan especial.
+          </p>
+
+          <div className="relative rounded-[2rem] bg-white/70 backdrop-blur-md border border-[#E8C45C]/50 shadow-xl px-4 py-6 md:px-6 overflow-hidden">
+            <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-5">
+              {fotosGaleria.map((foto, index) => (
+                <div
+                  key={foto}
+                  className="shrink-0 w-[82%] sm:w-[48%] md:w-[32%] lg:w-[24%] snap-center"
+                >
+                  <div className="rounded-[1.5rem] overflow-hidden border-4 border-[#F8E7A1] shadow-lg bg-[#FFF7EC]">
+                    <img
+                      src={foto}
+                      alt={`Foto de Sandra Alicia ${index + 1}`}
+                      className="w-full aspect-[3/4] object-cover hover:scale-105 transition duration-500"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-base md:text-lg text-[#7B4BA3] font-semibold mt-2">
+              Desliza para ver más fotos
+            </p>
           </div>
         </div>
       </section>
