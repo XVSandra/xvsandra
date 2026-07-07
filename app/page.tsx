@@ -316,16 +316,16 @@ catch (error: any) {
               <p>Rogelio Ruiz Paredes</p>
             </div>
 
-            <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
-
-
-        <p
-  className="font-['Great_Vibes'] text-4xl md:text-6xl text-[#F8E7A1] max-w-4xl mx-auto leading-tight"
->
-  ¡Acompáñame tú también a celebrar este momento tan especial lleno de amor,
-  alegría y sueños cumplidos!
-</p>
-            </div>
+           <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
+  <p
+    className="text-4xl md:text-6xl text-[#F8E7A1] max-w-4xl mx-auto leading-tight"
+    style={{ fontFamily: "'Great Vibes', cursive" }}
+  >
+    ¡Acompáñame tú también a celebrar este momento tan especial
+    <br />
+    lleno de amor, alegría y sueños cumplidos!
+  </p>
+</div>
           </div>
         </div>
 
