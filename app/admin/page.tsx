@@ -437,7 +437,6 @@ Con mucha ilusión te compartimos la invitación a los XV años de Sandra Alicia
 Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
 ${linkInvitacion}
 
-Tu código de invitación es: ${codigo}
 
 Agradecemos tu respuesta a más tardar el 31 de julio.`;
 
@@ -476,7 +475,6 @@ Con mucha ilusión te compartimos la invitación a los XV años de Sandra Alicia
 Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
 ${linkInvitacion}
 
-Tu código de invitación es: ${item.codigo}
 
 Agradecemos tu respuesta a más tardar el 31 de julio.`;
 
