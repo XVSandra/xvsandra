@@ -258,14 +258,24 @@ catch (error: any) {
  
     <div className="w-24 h-1 bg-[#E8C45C] rounded-full mx-auto mt-8 mb-10"></div>
 
-    <p
-      className="text-2xl md:text-3xl text-[#7B4BA3] font-bold mb-6"
-      style={{ fontFamily: "'Quicksand', sans-serif" }}
-    >
-      Falta muy poco para celebrar juntos
-    </p>
+   <div className="mb-10">
+  <div className="flex items-center justify-center gap-4 mb-5">
+    <span className="h-px w-14 md:w-24 bg-[#B78A25]/60" />
+    <span className="text-[#B78A25] text-xl">✦</span>
+    <span className="h-px w-14 md:w-24 bg-[#B78A25]/60" />
+  </div>
 
-    <ContadorElegante />
+  <p
+    className="text-4xl md:text-6xl text-[#7B4BA3] leading-tight"
+    style={{ fontFamily: "'Great Vibes', cursive" }}
+  >
+    El mejor viaje comienza cuando te atreves
+    <br />
+    a dar el primer paso
+  </p>
+</div>
+
+<ContadorElegante />
   </div>
 </section>
 
@@ -432,7 +442,7 @@ catch (error: any) {
           </h2>
 
           <p className="max-w-2xl mx-auto text-xl md:text-2xl text-[#4B3561] mb-10">
-            Un pedacito de mi historia antes de celebrar esta noche tan especial.
+            Hace quince años comenzó mi cuento. Hoy, con el corazón lleno de sueños e ilusión, te invito a compartir el capítulo más especial de mi historia.
           </p>
 
           <div className="relative rounded-[2rem] bg-white/70 backdrop-blur-md border border-[#E8C45C]/50 shadow-xl px-4 py-6 md:px-6 overflow-hidden">
