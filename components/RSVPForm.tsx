@@ -105,7 +105,20 @@ export default function RSVPForm({
       onSubmit={manejarSubmit}
       className="max-w-xl mx-auto section-card rounded-[28px] p-8 space-y-5"
     >
-      <div className="text-center bg-[#fff4f8] border border-pink-100 rounded-2xl p-5">
+     <div className="text-center mb-2">
+  <h3 className="text-2xl md:text-3xl font-bold text-[#7B4BA3]">
+    Confirmación de asistencia
+  </h3>
+
+  <p className="mt-3 text-sm md:text-base text-[#6B5A75] leading-relaxed">
+    Agradecemos tu respuesta a más tardar el{" "}
+    <span className="font-bold text-[#B78A25]">
+      31 de julio
+    </span>.
+  </p>
+</div>
+
+ <div className="text-center bg-[#fff4f8] border border-pink-100 rounded-2xl p-5">
         <p className="text-sm text-gray-600">Invitación para</p>
         <p className="text-2xl font-bold text-[#7B4BA3]">
           {nombreInvitado}
