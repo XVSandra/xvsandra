@@ -1,6 +1,6 @@
 "use client";
 
-import "@fontsource/great-vibes";
+
 import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/500.css";
 import "@fontsource/quicksand/600.css";
@@ -316,7 +316,7 @@ catch (error: any) {
               <p>Rogelio Ruiz Paredes</p>
             </div>
 
-           <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
+         <div data-aos="fade-up" data-aos-delay="300" className="mt-10">
   <p
     className="text-4xl md:text-6xl text-[#F8E7A1] max-w-4xl mx-auto leading-tight"
     style={{ fontFamily: "'Great Vibes', cursive" }}
