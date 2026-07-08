@@ -1,6 +1,7 @@
 "use client";
 
 
+import "@fontsource/great-vibes";
 import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/500.css";
 import "@fontsource/quicksand/600.css";
@@ -352,18 +353,28 @@ catch (error: any) {
         </h2>
 
         <div className="max-w-3xl mx-auto space-y-10 text-xl md:text-2xl">
-          <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="100">
-            <img src="/iconos/ubicacion.png" alt="Ubicación" className="w-10 h-10 mb-4" />
-            <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
-            <p>Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
+          <div
+            className="flex flex-col items-center"
+            data-aos="fade-up"
+            data-aos-delay="50"
+          >
+            <p className="font-semibold text-[#B78A25]">Fecha</p>
+            <p>Sábado 15 de agosto 2026</p>
           </div>
 
-          <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="200">
+          <div
+            className="flex flex-col items-center"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
             <img
-              src="/images/jardin-miniatura.jpg"
-              alt="Palladium"
-              className="rounded-lg shadow-lg w-72 h-auto object-cover"
+              src="/iconos/ubicacion.png"
+              alt="Ubicación"
+              className="w-10 h-10 mb-4"
             />
+            <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
+            <p>Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
+
             <a
               href="https://maps.app.goo.gl/4cgn53V6EUYMUF6E9"
               target="_blank"
@@ -374,16 +385,47 @@ catch (error: any) {
             </a>
           </div>
 
-          <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="300">
-            <img src="/iconos/vestimenta.png" alt="Código de vestimenta" className="w-10 h-10 mb-4" />
+          <div
+            className="flex flex-col items-center"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <img
+              src="/images/jardin-miniatura.jpg"
+              alt="Palladium"
+              className="rounded-lg shadow-lg w-72 h-auto object-cover"
+            />
+          </div>
+
+          <div
+            className="flex flex-col items-center"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <img
+              src="/iconos/vestimenta.png"
+              alt="Código de vestimenta"
+              className="w-10 h-10 mb-4"
+            />
             <p className="font-semibold text-[#B78A25]">Código de vestimenta:</p>
             <p>Formal</p>
           </div>
 
-          <div className="flex flex-col items-center" data-aos="fade-up" data-aos-delay="400">
-            <img src="/iconos/obsequio.png" alt="Obsequios" className="w-10 h-10 mb-4" />
+          <div
+            className="flex flex-col items-center"
+            data-aos="fade-up"
+            data-aos-delay="400"
+          >
+            <img
+              src="/iconos/obsequio.png"
+              alt="Obsequios"
+              className="w-10 h-10 mb-4"
+            />
             <p className="font-semibold text-[#B78A25]">Obsequios:</p>
-            <p>Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo, tendremos lluvia de sobres.</p>
+            <p>
+              Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo,
+              tendremos lluvia de sobres.
+            </p>
           </div>
         </div>
       </section>
@@ -492,7 +534,7 @@ catch (error: any) {
 
       <section className="py-16 px-6 text-center relative z-10" data-aos="zoom-in-up">
         <h2
-          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-4"
+          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-2"
           style={{ fontFamily: "'Great Vibes', cursive" }}
         >
           ¿Podrás acompañarme en este día tan especial?
@@ -516,7 +558,7 @@ catch (error: any) {
           Libro de visitas
         </h2>
 
-        <p className="mb-4 text-xl md:text-2xl">Déjame un mensajito bonito 🥰</p>
+        <p className="mb-4 text-xl md:text-2xl">Déjame tu mensaje o buenos deseos</p>
 
         <textarea
           value={mensajeLibro}
