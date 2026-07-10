@@ -344,137 +344,201 @@ catch (error: any) {
         </div>
       </section>
 
-      <section className="py-20 px-6 text-center relative z-10" data-aos="fade-up">
-        <h2
-          className="text-5xl md:text-7xl font-normal text-[#7B4BA3] mb-8"
-          style={{ fontFamily: "'Great Vibes', cursive" }}
+     <section className="py-20 px-6 text-center relative z-10" data-aos="fade-up">
+ <h2
+  className="text-5xl md:text-7xl text-[#7B4BA3] mb-10 font-normal"
+  style={{ fontFamily: "'Great Vibes', cursive" }}
+>
+  Detalles del Evento
+</h2>
+
+
+  <div className="max-w-3xl mx-auto space-y-10 text-xl md:text-2xl">
+    <div
+      className="flex flex-col items-center"
+      data-aos="fade-up"
+      data-aos-delay="50"
+    >
+      <p className="font-semibold text-[#B78A25]">Fecha</p>
+      <p>Sábado 15 de agosto 2026</p>
+      <p>7:00 pm</p>
+    </div>
+
+    <div
+      className="flex flex-col items-center"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      <img
+        src="/iconos/ubicacion.png"
+        alt="Ubicación"
+        className="w-10 h-10 mb-4"
+      />
+
+      <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
+
+      <p>
+        Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.
+      </p>
+
+      <a
+        href="https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n%20Palladium%20Mexicali"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block mt-5 px-6 py-3 rounded-full bg-[#7B4BA3] text-white font-semibold hover:bg-[#B78A25] transition"
+      >
+        Ver ubicación
+      </a>
+    </div>
+
+    <div
+      className="flex flex-col items-center"
+      data-aos="fade-up"
+      data-aos-delay="200"
+    >
+      <img
+        src="/images/jardin-miniatura.jpg"
+        alt="Palladium"
+        className="rounded-lg shadow-lg w-72 h-auto object-cover"
+      />
+    </div>
+
+    <div
+      className="flex flex-col items-center"
+      data-aos="fade-up"
+      data-aos-delay="300"
+    >
+      <img
+        src="/iconos/vestimenta.png"
+        alt="Vestimenta"
+        className="w-10 h-10 mb-4"
+      />
+
+      <p className="font-semibold text-[#B78A25]">
+        Código de vestimenta
+      </p>
+
+      <p>Formal</p>
+    </div>
+
+      <div
+      className="flex flex-col items-center"
+      data-aos="fade-up"
+      data-aos-delay="400"
+    >
+      <img
+        src="/iconos/obsequio.png"
+        alt="Obsequio"
+        className="w-10 h-10 mb-4"
+      />
+
+      <p className="font-semibold text-[#B78A25]">Obsequios</p>
+
+      <p>Lluvia de sobres</p>
+    </div>
+  </div>
+</section>
+
+<section
+  className="py-20 px-6 relative z-10 overflow-hidden"
+  data-aos="fade-up"
+>
+
+
+  <div className="max-w-5xl mx-auto text-center">
+    <h2
+      className="text-5xl md:text-7xl text-[#7B4BA3] mb-4 font-normal"
+      style={{ fontFamily: "'Great Vibes', cursive" }}
+    >
+      Itinerario
+    </h2>
+
+    <p className="text-[#6B5A75] text-lg md:text-xl mb-14 max-w-2xl mx-auto">
+      Momentos especiales preparados con mucho cariño para disfrutar juntos
+      esta noche inolvidable.
+    </p>
+
+    <div className="relative max-w-3xl mx-auto">
+      {/* Línea vertical */}
+      <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#B78A25]/20 via-[#B78A25] to-[#B78A25]/20 md:-translate-x-1/2" />
+
+      {[
+        {
+          hora: "7:00 pm",
+          titulo: "Recepción",
+          detalle: "Bienvenida a nuestros invitados",
+        },
+        {
+          hora: "7:30 pm",
+          titulo: "Entrada",
+          detalle: "Un momento mágico para dar inicio a la celebración",
+        },
+        {
+          hora: "8:30 pm",
+          titulo: "Cena",
+          detalle: "Compartamos una deliciosa cena en familia y amigos",
+        },
+        {
+          hora: "9:00 pm",
+          titulo: "Vals",
+          detalle: "Un instante lleno de emoción y recuerdos",
+        },
+        {
+          hora: "9:30 pm",
+          titulo: "Brindis",
+          detalle: "Celebremos los sueños, la alegría y los nuevos comienzos",
+        },
+        {
+          hora: "10:00 pm",
+          titulo: "¡A bailar y disfrutar!",
+          detalle: "Que comience la fiesta",
+        },
+        {
+          hora: "1:00 am",
+          titulo: "Fin",
+          detalle: "Gracias por acompañarme",
+        },
+      ].map((item, index) => (
+        <div
+          key={item.hora}
+          className={`relative flex items-center mb-10 ${
+            index % 2 === 0 ? "md:justify-start" : "md:justify-end"
+          }`}
+          data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
+          data-aos-delay={index * 100}
         >
-          Detalles del Evento
-        </h2>
+          {/* Punto decorativo */}
+          <div className="absolute left-6 md:left-1/2 w-5 h-5 bg-[#B78A25] rounded-full border-4 border-white shadow-md -translate-x-1/2 z-10" />
 
-        <div className="max-w-3xl mx-auto space-y-10 text-xl md:text-2xl">
+          {/* Tarjeta */}
           <div
-            className="flex flex-col items-center"
-            data-aos="fade-up"
-            data-aos-delay="50"
+            className={`ml-14 md:ml-0 w-full md:w-[44%] bg-white/90 border border-purple-100 rounded-[28px] shadow-lg p-6 text-left hover:shadow-xl transition ${
+              index % 2 === 0 ? "md:mr-auto" : "md:ml-auto"
+            }`}
           >
-            <p className="font-semibold text-[#B78A25]">Fecha</p>
-            <p>Sábado 15 de agosto 2026</p>
-          </div>
+            <p className="text-[#B78A25] font-bold text-xl mb-1">
+              {item.hora}
+            </p>
 
-          <div
-            className="flex flex-col items-center"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <img
-              src="/iconos/ubicacion.png"
-              alt="Ubicación"
-              className="w-10 h-10 mb-4"
-            />
-            <p className="font-semibold text-[#B78A25]">Salón Palladium</p>
-            <p>Blvd. Lázaro Cárdenas 1085, Las Flores, 21330 Mexicali, B.C.</p>
-
-            <a
-              href="https://maps.app.goo.gl/4cgn53V6EUYMUF6E9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-block bg-[#7B4BA3] text-white px-8 py-3 rounded-full shadow hover:bg-[#E8C45C] hover:text-[#4B3561] transition text-lg md:text-xl font-semibold"
+            <h3
+              className="text-3xl md:text-4xl text-[#7B4BA3] mb-2 font-normal"
+              style={{ fontFamily: "'Great Vibes', cursive" }}
             >
-              Ver ubicación en Google Maps
-            </a>
-          </div>
+              {item.titulo}
+            </h3>
 
-          <div
-            className="flex flex-col items-center"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
-            <img
-              src="/images/jardin-miniatura.jpg"
-              alt="Palladium"
-              className="rounded-lg shadow-lg w-72 h-auto object-cover"
-            />
-          </div>
-
-          <div
-            className="flex flex-col items-center"
-            data-aos="fade-up"
-            data-aos-delay="300"
-          >
-            <img
-              src="/iconos/vestimenta.png"
-              alt="Código de vestimenta"
-              className="w-10 h-10 mb-4"
-            />
-            <p className="font-semibold text-[#B78A25]">Código de vestimenta:</p>
-            <p>Formal</p>
-          </div>
-
-          <div
-            className="flex flex-col items-center"
-            data-aos="fade-up"
-            data-aos-delay="400"
-          >
-            <img
-              src="/iconos/obsequio.png"
-              alt="Obsequios"
-              className="w-10 h-10 mb-4"
-            />
-            <p className="font-semibold text-[#B78A25]">Obsequios:</p>
-            <p>
-              Tu presencia es mi mejor regalo, pero si deseas obsequiarme algo,
-              tendremos lluvia de sobres.
+            <p className="text-[#6B5A75] text-base md:text-lg leading-relaxed">
+              {item.detalle}
             </p>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
 
-      <section className="py-16 px-6 text-center relative z-10" data-aos="fade-up">
-        <h2
-          className="text-5xl md:text-6xl font-normal text-[#7B4BA3] mb-10"
-          style={{ fontFamily: "'Great Vibes', cursive" }}
-        >
-          Itinerario
-        </h2>
 
-        <div className="relative w-3/4 md:w-1/2 mx-auto">
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full border-l-2 border-[#C7A4E0]"></div>
 
-          <div className="flex flex-col space-y-10">
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">7:00 PM</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Recepción</div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">7:45 PM</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Vals</div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">8:15 PM</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Brindis</div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">8:30 PM</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Cena</div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">9:00 PM</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">Fotos</div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="w-1/2 text-right pr-4 text-xl md:text-2xl font-semibold">Fiesta</div>
-              <div className="w-1/2 text-left pl-4 text-xl md:text-2xl">¡A bailar y disfrutar!</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+</section>
       <section className="py-16 px-6 text-center relative z-10" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <p className="uppercase tracking-[0.32em] text-[#B78A25] text-sm md:text-base font-bold mb-3">
@@ -580,7 +644,7 @@ catch (error: any) {
           <p className="mt-4 text-green-600 font-semibold">{mensajeEnviado}</p>
         )}
 
-      </section>
-    </div>
+           </section>
+      </div>
   );
 }
