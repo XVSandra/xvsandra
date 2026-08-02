@@ -438,7 +438,7 @@ Puedes ver todos los detalles y confirmar tu asistencia en el siguiente enlace:
 ${linkInvitacion}
 
 
-Agradecemos tu respuesta a más tardar el 31 de julio.`;
+Agradecemos tu respuesta a más tardar el 07 de Agosto.`;
 
   const urlWhatsApp = `https://wa.me/52${telefonoLimpio}?text=${encodeURIComponent(
     mensaje
