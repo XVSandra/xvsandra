@@ -114,7 +114,7 @@ export default function RSVPForm({
   <p>Agradecemos tu respuesta a más tardar el</p>
 
   <p className="font-bold text-[#B78A25] text-xl md:text-2xl mt-1">
-    31 de julio
+    07 de agosto
   </p>
 </div>
 </div>
