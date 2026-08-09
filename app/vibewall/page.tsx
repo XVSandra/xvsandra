@@ -22,7 +22,6 @@ export default function VibeWallPage() {
   const [error, setError] = useState("");
   const [showControls, setShowControls] = useState(true);
   const idleTimer = useRef<number | null>(null);
-  const knownIds = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     return subscribeToVibeWall(
@@ -31,18 +30,16 @@ export default function VibeWallPage() {
         setError("");
 
         setPlaylist((old) => {
-          if (old.length === 0) {
-            knownIds.current = new Set(next.map((v) => v.id));
-            return shuffled(next);
-          }
+          if (old.length === 0) return shuffled(next);
 
           const nextIds = new Set(next.map((v) => v.id));
           const retained = old.filter((v) => nextIds.has(v.id));
           const retainedIds = new Set(retained.map((v) => v.id));
           const additions = next.filter((v) => !retainedIds.has(v.id));
 
-          knownIds.current = nextIds;
-          return additions.length ? [...retained, ...shuffled(additions)] : retained;
+          return additions.length
+            ? [...retained, ...shuffled(additions)]
+            : retained;
         });
       },
       (err) => setError(err.message)
@@ -135,6 +132,27 @@ export default function VibeWallPage() {
     );
   }
 
+  const QrBadge = () => (
+    <div className="pointer-events-auto flex items-center gap-3 rounded-2xl border border-white/10 bg-black/55 p-2.5 pr-4 shadow-2xl backdrop-blur-xl">
+      <div className="rounded-xl bg-white p-1.5">
+        <img
+          src="/vibedump/qr-vibedump.png"
+          alt="QR para abrir VibeDump"
+          className="h-20 w-20"
+        />
+      </div>
+
+      <div className="max-w-40">
+        <p className="text-xs uppercase tracking-[0.2em] text-[#d8c8ff]">
+          Sube tu vibe
+        </p>
+        <p className="mt-1 text-sm font-medium leading-5 text-white">
+          Escanea y comparte tus fotos
+        </p>
+      </div>
+    </div>
+  );
+
   if (!active) {
     return (
       <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#09070d] px-8 text-center text-white">
@@ -151,10 +169,10 @@ export default function VibeWallPage() {
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/40 md:text-2xl">
             Las mejores vibes de la noche aparecerán aquí ✨
           </p>
-          <div className="mx-auto mt-10 h-px w-32 bg-gradient-to-r from-transparent via-[#b28cff]/60 to-transparent" />
-          <p className="mt-6 text-sm uppercase tracking-[0.25em] text-white/25">
-            Sube · comparte · vive el momento
-          </p>
+
+          <div className="mx-auto mt-10 flex justify-center">
+            <QrBadge />
+          </div>
         </div>
       </main>
     );
@@ -192,6 +210,7 @@ export default function VibeWallPage() {
                 Vibe<span className="text-[#b28cff]">Wall</span>
               </p>
             </div>
+
             <p className="rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs text-white/60 backdrop-blur-lg">
               {vibes.length} {vibes.length === 1 ? "vibe" : "vibes"}
             </p>
@@ -225,6 +244,10 @@ export default function VibeWallPage() {
         </div>
       </section>
 
+      <div className="absolute bottom-6 right-6 z-20 hidden lg:block">
+        <QrBadge />
+      </div>
+
       <div
         className={`absolute inset-x-0 bottom-5 z-30 flex justify-center transition-opacity duration-300 ${
           showControls ? "cursor-auto opacity-100" : "pointer-events-none opacity-0"
@@ -234,15 +257,18 @@ export default function VibeWallPage() {
           <button onClick={previous} className="h-11 w-11 rounded-full hover:bg-white/10" aria-label="Anterior">
             ←
           </button>
+
           <button
             onClick={() => setPaused((value) => !value)}
             className="min-w-28 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
           >
             {paused ? "Continuar" : "Pausar"}
           </button>
+
           <button onClick={next} className="h-11 w-11 rounded-full hover:bg-white/10" aria-label="Siguiente">
             →
           </button>
+
           <button onClick={fullscreen} className="h-11 w-11 rounded-full hover:bg-white/10" aria-label="Pantalla completa">
             ⛶
           </button>
