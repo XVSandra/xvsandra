@@ -12,8 +12,8 @@ import {
   getStoredVibeCount,
   saveStoredVibe,
 } from "@/lib/vibedump/localAlbum";
+import { syncVibeById } from "@/lib/vibedump/syncQueue";
 import NetworkStatus from "./NetworkStatus";
-import { requestVibeDumpSync } from "./AutoSync";
 
 const GUEST_NAME_KEY = "vibedump_guest_name";
 
@@ -63,7 +63,7 @@ async function optimizeImage(
   });
 
   if (!blob) {
-    throw new Error("No fue posible generar la versión optimizada.");
+    throw new Error("No fue posible preparar la fotografía.");
   }
 
   return blob;
@@ -96,10 +96,12 @@ export default function CameraExperience() {
   const [isTorchSupported, setIsTorchSupported] = useState(false);
   const [torchEnabled, setTorchEnabled] = useState(false);
   const [flashEffect, setFlashEffect] = useState(false);
-  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [vibeCount, setVibeCount] = useState(0);
-  const [savedMessage, setSavedMessage] = useState("");
-  const [showSavedActions, setShowSavedActions] = useState(false);
+  const [resultTitle, setResultTitle] = useState("");
+  const [resultText, setResultText] = useState("");
+  const [resultIcon, setResultIcon] = useState("✨");
+  const [showResult, setShowResult] = useState(false);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -263,16 +265,18 @@ export default function CameraExperience() {
     await startCamera(facingMode);
   };
 
-  const saveLocally = async () => {
-    if (!previewBlob || !guestName || isOptimizing) return;
+  const sendVibe = async () => {
+    if (!previewBlob || !guestName || isSending) return;
 
-    setIsOptimizing(true);
+    setIsSending(true);
+    setCameraError("");
 
     try {
       const optimizedBlob = await optimizeImage(previewBlob);
+      const vibeId = createId();
 
       await saveStoredVibe({
-        id: createId(),
+        id: vibeId,
         guestName,
         blob: optimizedBlob,
         source: photoSource,
@@ -283,8 +287,9 @@ export default function CameraExperience() {
         retryCount: 0,
       });
 
+      const result = await syncVibeById(vibeId);
+
       await refreshCount();
-      requestVibeDumpSync();
 
       if (previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
@@ -293,39 +298,56 @@ export default function CameraExperience() {
       setPreviewUrl("");
       setPreviewBlob(null);
       setPreviewOriginalSize(0);
-      setSavedMessage("Vibe guardada ✨");
-      setShowSavedActions(true);
       stopCamera();
+
+      if (result.sent) {
+        setResultIcon("✨");
+        setResultTitle("¡Vibe enviado!");
+        setResultText(
+          "Ya llegó al álbum del evento. Sigue capturando tu noche."
+        );
+      } else {
+        setResultIcon("📶");
+        setResultTitle("Tu vibe está a salvo");
+        setResultText(
+          result.online
+            ? "No pudimos enviarlo ahora, pero quedó guardado y VibeDump volverá a intentarlo automáticamente."
+            : "No tienes conexión en este momento. Quedó guardado y se enviará automáticamente cuando vuelva internet."
+        );
+      }
+
+      setShowResult(true);
     } catch (error) {
       setCameraError(
         error instanceof Error
           ? error.message
-          : "No fue posible guardar la fotografía."
+          : "No fue posible preparar la fotografía."
       );
     } finally {
-      setIsOptimizing(false);
+      setIsSending(false);
     }
   };
 
   const continueCapturing = async () => {
-    setSavedMessage("");
-    setShowSavedActions(false);
+    setShowResult(false);
+    setResultTitle("");
+    setResultText("");
     await startCamera(facingMode);
   };
 
-  if (showSavedActions) {
+  if (showResult) {
     return (
       <main className="min-h-screen bg-[#09070d] text-white">
         <div className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 text-center">
-          <div className="text-5xl">✨</div>
+          <div className="text-6xl">{resultIcon}</div>
 
-          <p className="mt-6 text-xs uppercase tracking-[0.3em] text-[#d6c4ff]">
-            {savedMessage}
-          </p>
-
-          <h1 className="mt-4 text-3xl font-semibold">
-            Ya está en tu dump
+          <h1 className="mt-6 text-3xl font-semibold">
+            {resultTitle}
           </h1>
+
+          <p className="mt-3 max-w-sm text-sm leading-6 text-white/55">
+            {resultText}
+          </p>
 
           <div className="mt-8 grid w-full gap-3">
             <button
@@ -340,7 +362,7 @@ export default function CameraExperience() {
               href="/vibedump/gallery"
               className="rounded-2xl border border-[#b995ff]/25 bg-[#b995ff]/10 px-5 py-4 font-medium text-[#dfd1ff]"
             >
-              Armar un dump desde mi galería
+              Elegir varias de mi galería
             </Link>
 
             <Link
@@ -363,14 +385,14 @@ export default function CameraExperience() {
             <button
               type="button"
               onClick={retakePhoto}
-              disabled={isOptimizing}
+              disabled={isSending}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl"
             >
               ←
             </button>
 
             <div className="text-center">
-              <p className="text-lg font-medium">¿La guardamos?</p>
+              <p className="text-lg font-medium">¿La enviamos?</p>
               <p className="text-xs text-white/45">
                 {formatBytes(previewOriginalSize)}
               </p>
@@ -392,7 +414,7 @@ export default function CameraExperience() {
               <button
                 type="button"
                 onClick={retakePhoto}
-                disabled={isOptimizing}
+                disabled={isSending}
                 className="rounded-2xl border border-white/15 bg-white/5 px-4 py-4 font-medium"
               >
                 Repetir
@@ -400,13 +422,17 @@ export default function CameraExperience() {
 
               <button
                 type="button"
-                onClick={saveLocally}
-                disabled={isOptimizing}
-                className="rounded-2xl bg-[#b995ff] px-4 py-4 font-semibold text-[#160d24]"
+                onClick={sendVibe}
+                disabled={isSending}
+                className="rounded-2xl bg-[#b995ff] px-4 py-4 font-semibold text-[#160d24] disabled:opacity-60"
               >
-                {isOptimizing ? "Guardando..." : "Guardar vibe"}
+                {isSending ? "Enviando..." : "Enviar foto"}
               </button>
             </div>
+
+            <p className="mt-4 text-center text-xs leading-5 text-white/35">
+              Si pierdes conexión, VibeDump guarda una copia y la envía después.
+            </p>
           </section>
         </div>
       </main>

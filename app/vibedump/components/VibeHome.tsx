@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getStoredVibeCount, getStoredVibes } from "@/lib/vibedump/localAlbum";
+import {
+  getStoredVibeCount,
+  getStoredVibes,
+} from "@/lib/vibedump/localAlbum";
 import NetworkStatus from "./NetworkStatus";
 
 const GUEST_NAME_KEY = "vibedump_guest_name";
@@ -36,7 +39,8 @@ export default function VibeHome() {
   };
 
   useEffect(() => {
-    const savedName = window.localStorage.getItem(GUEST_NAME_KEY) ?? "";
+    const savedName =
+      window.localStorage.getItem(GUEST_NAME_KEY) ?? "";
     const savedConsent =
       window.localStorage.getItem(CONSENT_KEY) === "yes";
 
@@ -73,7 +77,7 @@ export default function VibeHome() {
 
   const resetGuest = () => {
     const confirmed = window.confirm(
-      "¿Cambiar de invitado? Las fotos guardadas en este dispositivo no se borrarán."
+      "¿Cambiar de invitado? Las fotos de este dispositivo no se borrarán."
     );
 
     if (!confirmed) return;
@@ -110,8 +114,7 @@ export default function VibeHome() {
         </h2>
 
         <p className="mt-3 text-sm leading-6 text-white/55">
-          Usa tu nombre o un apodo. Solo lo utilizaremos para identificar las
-          fotos que tú decidas guardar en VibeDump.
+          Usa tu nombre o un apodo para identificar las fotos que compartas.
         </p>
 
         <label
@@ -146,13 +149,13 @@ export default function VibeHome() {
           />
 
           <span className="text-sm leading-6 text-white/60">
-            Acepto guardar y compartir en el álbum privado del evento las
-            fotografías que yo elija dentro de VibeDump.
+            Acepto compartir en el álbum privado del evento las fotografías
+            que yo elija enviar mediante VibeDump.
           </span>
         </label>
 
         {error && (
-          <p className="mt-4 text-sm text-[#ffb4b4]" aria-live="polite">
+          <p className="mt-4 text-sm text-[#ffb4b4]">
             {error}
           </p>
         )}
@@ -204,7 +207,7 @@ export default function VibeHome() {
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-white/35">
-            Pendientes
+            Por enviar
           </p>
           <p className="mt-2 text-3xl font-semibold">{pendingCount}</p>
         </div>
@@ -218,9 +221,10 @@ export default function VibeHome() {
           <span>
             <span className="block text-lg font-semibold">Abrir cámara</span>
             <span className="mt-1 block text-sm opacity-70">
-              Captura lo que está pasando ahora
+              Captura y envía tu momento
             </span>
           </span>
+
           <span className="text-2xl" aria-hidden="true">📷</span>
         </Link>
 
@@ -230,12 +234,13 @@ export default function VibeHome() {
         >
           <span>
             <span className="block text-lg font-medium text-[#dfd1ff]">
-              Armar un dump
+              Compartir varias
             </span>
             <span className="mt-1 block text-sm text-white/45">
               Elige hasta 20 fotos de tu galería
             </span>
           </span>
+
           <span className="text-2xl" aria-hidden="true">✦</span>
         </Link>
 
@@ -246,14 +251,24 @@ export default function VibeHome() {
           <span>
             <span className="block text-lg font-medium">Ver mis vibes</span>
             <span className="mt-1 block text-sm text-white/45">
-              Revisa lo que ya guardaste
+              Revisa lo que ya compartiste
             </span>
           </span>
+
           <span className="text-2xl" aria-hidden="true">▦</span>
         </Link>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm text-white/40">
+      {pendingCount > 0 && (
+        <div className="mt-6 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-center text-xs leading-5 text-amber-50/65">
+          {pendingCount === 1
+            ? "Tienes 1 vibe esperando conexión."
+            : `Tienes ${pendingCount} vibes esperando conexión.`}{" "}
+          No tienes que hacer nada: VibeDump las enviará automáticamente.
+        </div>
+      )}
+
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm text-white/35">
         <button
           type="button"
           onClick={() => {
@@ -269,21 +284,7 @@ export default function VibeHome() {
         <button type="button" onClick={resetGuest}>
           Cambiar invitado
         </button>
-
-        <span aria-hidden="true">•</span>
-
-        <Link href="/vibedump/check">
-          Probar dispositivo
-        </Link>
       </div>
-
-      {pendingCount > 0 && (
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-xs leading-5 text-white/40">
-          Tus {pendingCount} {pendingCount === 1 ? "foto está" : "fotos están"} guardadas
-          en este dispositivo y listas para el álbum central cuando activemos la
-          sincronización.
-        </div>
-      )}
     </section>
   );
 }

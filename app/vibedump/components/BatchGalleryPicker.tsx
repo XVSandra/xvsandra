@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useRef, useState } from "react";
 import { saveStoredVibe } from "@/lib/vibedump/localAlbum";
-import { requestVibeDumpSync } from "./AutoSync";
+import { syncVibeById } from "@/lib/vibedump/syncQueue";
 
 type Props = {
   guestName: string;
@@ -12,7 +12,7 @@ type Props = {
 type BatchItem = {
   id: string;
   file: File;
-  status: "waiting" | "processing" | "saved" | "error";
+  status: "waiting" | "processing" | "sending" | "sent" | "saved" | "error";
   message?: string;
 };
 
@@ -26,10 +26,8 @@ function createId() {
 
 function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
-
   const kb = bytes / 1024;
   if (kb < 1024) return `${kb.toFixed(1)} KB`;
-
   return `${(kb / 1024).toFixed(2)} MB`;
 }
 
@@ -56,7 +54,7 @@ async function optimizeImage(
 
   if (!context) {
     bitmap.close();
-    throw new Error("No fue posible optimizar la imagen.");
+    throw new Error("No fue posible preparar la imagen.");
   }
 
   context.drawImage(bitmap, 0, 0, width, height);
@@ -67,7 +65,7 @@ async function optimizeImage(
   });
 
   if (!blob) {
-    throw new Error("No fue posible crear la foto optimizada.");
+    throw new Error("No fue posible preparar la imagen.");
   }
 
   return blob;
@@ -78,15 +76,12 @@ export default function BatchGalleryPicker({
   onSaved,
 }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-
   const [items, setItems] = useState<BatchItem[]>([]);
   const [processing, setProcessing] = useState(false);
   const [complete, setComplete] = useState(false);
 
   const selectPhotos = () => {
-    if (!processing) {
-      inputRef.current?.click();
-    }
+    if (!processing) inputRef.current?.click();
   };
 
   const onFilesSelected = (event: ChangeEvent<HTMLInputElement>) => {
@@ -129,9 +124,10 @@ export default function BatchGalleryPicker({
         }
 
         const optimizedBlob = await optimizeImage(item.file);
+        const vibeId = createId();
 
         await saveStoredVibe({
-          id: createId(),
+          id: vibeId,
           guestName,
           blob: optimizedBlob,
           source: "gallery",
@@ -149,8 +145,24 @@ export default function BatchGalleryPicker({
             entry.id === item.id
               ? {
                   ...entry,
-                  status: "saved",
+                  status: "sending",
                   message: formatBytes(optimizedBlob.size),
+                }
+              : entry
+          )
+        );
+
+        const result = await syncVibeById(vibeId);
+
+        setItems((current) =>
+          current.map((entry) =>
+            entry.id === item.id
+              ? {
+                  ...entry,
+                  status: result.sent ? "sent" : "saved",
+                  message: result.sent
+                    ? "Enviada"
+                    : "Guardada para enviar después",
                 }
               : entry
           )
@@ -165,7 +177,7 @@ export default function BatchGalleryPicker({
                   message:
                     error instanceof Error
                       ? error.message
-                      : "No se pudo guardar",
+                      : "No se pudo preparar",
                 }
               : entry
           )
@@ -174,37 +186,28 @@ export default function BatchGalleryPicker({
     }
 
     await onSaved(saved);
-
-    if (saved > 0) {
-      requestVibeDumpSync();
-    }
     setProcessing(false);
     setComplete(true);
   };
 
-  const successful = items.filter(
-    (item) => item.status === "saved"
-  ).length;
-
-  const failed = items.filter(
-    (item) => item.status === "error"
-  ).length;
+  const sent = items.filter((item) => item.status === "sent").length;
+  const waiting = items.filter((item) => item.status === "saved").length;
+  const failed = items.filter((item) => item.status === "error").length;
 
   return (
     <section className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-[#d6c4ff]">
-            Dump desde galería
+            Desde tu galería
           </p>
 
           <h2 className="mt-2 text-xl font-medium">
-            Sube varias de una vez
+            Comparte varias fotos
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-white/50">
-            Selecciona hasta 20 fotos. Las optimizamos y las dejamos en tu
-            cola de vibes pendientes.
+            Selecciona hasta 20. VibeDump las prepara y envía automáticamente.
           </p>
         </div>
 
@@ -235,7 +238,7 @@ export default function BatchGalleryPicker({
 
       {items.length > 0 && (
         <>
-          <div className="mt-4 max-h-52 space-y-2 overflow-y-auto pr-1">
+          <div className="mt-4 max-h-56 space-y-2 overflow-y-auto pr-1">
             {items.map((item, index) => (
               <div
                 key={item.id}
@@ -252,11 +255,11 @@ export default function BatchGalleryPicker({
 
                 <span className="shrink-0 text-xs text-white/55">
                   {item.status === "waiting" && "Lista"}
-                  {item.status === "processing" && "Optimizando…"}
-                  {item.status === "saved" &&
-                    `Guardada · ${item.message ?? ""}`}
-                  {item.status === "error" &&
-                    `Error · ${item.message ?? ""}`}
+                  {item.status === "processing" && "Preparando…"}
+                  {item.status === "sending" && "Enviando…"}
+                  {item.status === "sent" && "Enviada ✓"}
+                  {item.status === "saved" && "Se enviará después"}
+                  {item.status === "error" && `Error · ${item.message ?? ""}`}
                 </span>
               </div>
             ))}
@@ -270,20 +273,23 @@ export default function BatchGalleryPicker({
               className="mt-4 w-full rounded-2xl bg-[#b995ff] px-5 py-4 font-semibold text-[#160d24] disabled:opacity-60"
             >
               {processing
-                ? "Preparando tu dump..."
-                : `Guardar ${items.length} vibes`}
+                ? "Enviando tus vibes..."
+                : `Enviar ${items.length} ${items.length === 1 ? "foto" : "fotos"}`}
             </button>
           )}
 
           {complete && (
             <div className="mt-4 rounded-2xl border border-[#b995ff]/20 bg-[#b995ff]/10 p-4 text-sm">
               <p className="font-medium text-[#dfd1ff]">
-                Dump preparado ✨
+                ¡Listo! ✨
               </p>
 
-              <p className="mt-1 text-white/55">
-                {successful} guardadas
-                {failed > 0 ? ` · ${failed} con error` : ""}.
+              <p className="mt-1 leading-5 text-white/55">
+                {sent > 0 && `${sent} ${sent === 1 ? "enviada" : "enviadas"}. `}
+                {waiting > 0 &&
+                  `${waiting} ${waiting === 1 ? "quedó guardada" : "quedaron guardadas"} para enviarse automáticamente. `}
+                {failed > 0 &&
+                  `${failed} ${failed === 1 ? "no pudo prepararse" : "no pudieron prepararse"}.`}
               </p>
 
               <button
@@ -294,12 +300,17 @@ export default function BatchGalleryPicker({
                 }}
                 className="mt-3 text-sm font-medium text-[#d6c4ff]"
               >
-                Preparar otro dump
+                Compartir más fotos
               </button>
             </div>
           )}
         </>
       )}
+
+      <p className="mt-4 text-xs leading-5 text-white/35">
+        Si la conexión falla, las fotos quedan protegidas en tu dispositivo y
+        VibeDump vuelve a intentar el envío automáticamente.
+      </p>
     </section>
   );
 }

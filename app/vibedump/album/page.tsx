@@ -1,5 +1,5 @@
 "use client";
-import CloudStatus from "../components/CloudStatus";
+
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -31,10 +31,10 @@ function formatDate(date: string) {
 }
 
 function statusLabel(status: StoredVibe["syncStatus"]) {
-  if (status === "sent") return "Enviada";
-  if (status === "uploading") return "Enviando";
-  if (status === "error") return "Reintentar";
-  return "Pendiente";
+  if (status === "sent") return "Enviada ✓";
+  if (status === "uploading") return "Enviando…";
+  if (status === "error") return "Se enviará después";
+  return "Esperando conexión";
 }
 
 export default function VibeDumpAlbumPage() {
@@ -115,7 +115,7 @@ export default function VibeDumpAlbumPage() {
     const warning =
       photo.syncStatus === "sent"
         ? "¿Eliminar esta foto de este dispositivo?"
-        : "Esta foto todavía no se ha enviado al álbum final. ¿Eliminarla de este dispositivo?";
+        : "Esta foto todavía está esperando enviarse. Si la eliminas ahora, no llegará al álbum del evento. ¿Continuar?";
 
     if (!window.confirm(warning)) return;
 
@@ -254,7 +254,7 @@ export default function VibeDumpAlbumPage() {
 
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <p className="text-[11px] uppercase tracking-[0.15em] text-white/40">
-              Pendientes
+              Por enviar
             </p>
             <p className="mt-2 text-xl font-semibold">
               {pendingCount}
@@ -273,10 +273,17 @@ export default function VibeDumpAlbumPage() {
 
         <div className="mt-5">
           <StorageStatus />
-<div className="mt-4">
-  <CloudStatus />
-</div>
         </div>
+
+        {pendingCount > 0 && (
+          <div className="mt-4 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-sm leading-6 text-amber-50/65">
+            {pendingCount === 1
+              ? "Hay 1 vibe esperando conexión."
+              : `Hay ${pendingCount} vibes esperando conexión.`}{" "}
+            No necesitas sincronizar manualmente: VibeDump las enviará
+            automáticamente cuando sea posible.
+          </div>
+        )}
 
         {loading ? (
           <div className="mt-16 text-center text-white/45">
