@@ -90,6 +90,12 @@ type Entry = {
   date: Date;
 };
 
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy.buffer;
+}
+
 function makeZip(entries: Entry[]) {
   const locals: Uint8Array[] = [];
   const centrals: Uint8Array[] = [];
@@ -105,7 +111,7 @@ function makeZip(entries: Entry[]) {
     u32(lv, 0, 0x04034b50);
     u16(lv, 4, 20);
     u16(lv, 6, 0);
-    u16(lv, 8, 0); // STORE
+    u16(lv, 8, 0);
     u16(lv, 10, dt.time);
     u16(lv, 12, dt.date);
     u32(lv, 14, entry.crc);
@@ -160,7 +166,13 @@ function makeZip(entries: Entry[]) {
   u32(ev, 16, offset);
   u16(ev, 20, 0);
 
-  return new Blob([...locals, ...centrals, end], {
+  const blobParts: BlobPart[] = [
+    ...locals.map(toArrayBuffer),
+    ...centrals.map(toArrayBuffer),
+    toArrayBuffer(end),
+  ];
+
+  return new Blob(blobParts, {
     type: "application/zip",
   });
 }
