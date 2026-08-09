@@ -10,6 +10,7 @@ import {
 } from "@/lib/vibedump/localAlbum";
 import NetworkStatus from "../components/NetworkStatus";
 import StorageStatus from "../components/StorageStatus";
+import RetryPendingButton from "../components/RetryPendingButton";
 import BackupTools from "../components/BackupTools";
 
 const GUEST_NAME_KEY = "vibedump_guest_name";
@@ -276,12 +277,20 @@ export default function VibeDumpAlbumPage() {
         </div>
 
         {pendingCount > 0 && (
-          <div className="mt-4 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-sm leading-6 text-amber-50/65">
-            {pendingCount === 1
-              ? "Hay 1 vibe esperando conexión."
-              : `Hay ${pendingCount} vibes esperando conexión.`}{" "}
-            No necesitas sincronizar manualmente: VibeDump las enviará
-            automáticamente cuando sea posible.
+          <div className="mt-4 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-4 text-sm leading-6 text-amber-50/65">
+            <p>
+              {pendingCount === 1
+                ? "Hay 1 vibe pendiente de envío."
+                : `Hay ${pendingCount} vibes pendientes de envío.`}
+            </p>
+
+            <p className="mt-1 text-white/45">
+              Si ya recuperaste internet, puedes reintentar ahora.
+            </p>
+<RetryPendingButton
+  pendingCount={pendingCount}
+  onComplete={loadPhotos}
+/>
           </div>
         )}
 

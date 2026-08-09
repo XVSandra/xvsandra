@@ -24,6 +24,7 @@ export type SingleSyncResult = {
   enabled: boolean;
   online: boolean;
   sent: boolean;
+  recovered?: number;
   error?: string;
 };
 
@@ -100,9 +101,39 @@ async function sendOne(
 }
 
 /**
- * Intenta enviar inmediatamente UNA vibe recién creada.
- * Si no hay internet o Cloud está apagado, la foto permanece local
- * y AutoSync podrá reintentarlo después.
+ * Reintenta toda la cola anterior después de una subida exitosa.
+ * Esto es especialmente útil en móviles: si Firebase Auth falló mientras
+ * el teléfono estaba offline, una nueva subida exitosa confirma que la sesión
+ * ya se recuperó y podemos procesar las vibes antiguas sin esperar eventos
+ * del navegador.
+ */
+async function recoverOlderPendingVibes(
+  excludeVibeId: string,
+  onEvent?: (event: SyncEvent) => void
+) {
+  const vibes = await getStoredVibes();
+
+  const candidates = vibes.filter(
+    (vibe) =>
+      vibe.id != excludeVibeId &&
+      (vibe.syncStatus === "pending" ||
+        vibe.syncStatus === "error" ||
+        vibe.syncStatus === "uploading")
+  );
+
+  let recovered = 0;
+
+  for (const vibe of candidates) {
+    const ok = await sendOne(vibe, onEvent);
+    if (ok) recovered += 1;
+  }
+
+  return recovered;
+}
+
+/**
+ * Envía una vibe recién creada y, si tiene éxito, aprovecha la sesión Firebase
+ * ya recuperada para procesar automáticamente cualquier vibe anterior pendiente.
  */
 export async function syncVibeById(
   vibeId: string,
@@ -137,20 +168,34 @@ export async function syncVibeById(
   }
 
   if (vibe.syncStatus === "sent") {
+    const recovered = await recoverOlderPendingVibes(vibeId, onEvent);
+
     return {
       enabled: true,
       online: true,
       sent: true,
+      recovered,
     };
   }
 
   const sent = await sendOne(vibe, onEvent);
 
+  if (!sent) {
+    return {
+      enabled: true,
+      online: true,
+      sent: false,
+      error: "No se pudo enviar en este momento.",
+    };
+  }
+
+  const recovered = await recoverOlderPendingVibes(vibeId, onEvent);
+
   return {
     enabled: true,
     online: true,
-    sent,
-    error: sent ? undefined : "No se pudo enviar en este momento.",
+    sent: true,
+    recovered,
   };
 }
 

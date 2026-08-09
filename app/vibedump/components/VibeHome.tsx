@@ -7,6 +7,7 @@ import {
   getStoredVibes,
 } from "@/lib/vibedump/localAlbum";
 import NetworkStatus from "./NetworkStatus";
+import RetryPendingButton from "./RetryPendingButton";
 
 const GUEST_NAME_KEY = "vibedump_guest_name";
 const CONSENT_KEY = "vibedump_consent";
@@ -260,11 +261,22 @@ export default function VibeHome() {
       </div>
 
       {pendingCount > 0 && (
-        <div className="mt-6 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-center text-xs leading-5 text-amber-50/65">
-          {pendingCount === 1
-            ? "Tienes 1 vibe esperando conexión."
-            : `Tienes ${pendingCount} vibes esperando conexión.`}{" "}
-          No tienes que hacer nada: VibeDump las enviará automáticamente.
+        <div className="mt-6 rounded-2xl border border-amber-200/15 bg-amber-200/5 px-4 py-4 text-center text-xs leading-5 text-amber-50/65">
+          <p>
+            {pendingCount === 1
+              ? "Tienes 1 vibe pendiente de envío."
+              : `Tienes ${pendingCount} vibes pendientes de envío.`}
+          </p>
+
+          <p className="mt-1 text-white/45">
+            VibeDump seguirá intentando automáticamente. Si ya tienes conexión,
+            también puedes forzar el envío ahora.
+          </p>
+
+          <RetryPendingButton
+            pendingCount={pendingCount}
+            onComplete={refreshCounts}
+          />
         </div>
       )}
 

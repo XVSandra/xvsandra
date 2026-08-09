@@ -1,4 +1,8 @@
-import { signInAnonymously } from "firebase/auth";
+import {
+  signInAnonymously,
+  signOut,
+  type User,
+} from "firebase/auth";
 import {
   doc,
   serverTimestamp,
@@ -19,12 +23,35 @@ export type CloudUploadProgress = {
   percent: number;
 };
 
-async function ensureAnonymousUser() {
+async function refreshAnonymousSession(user: User) {
+  try {
+    // Fuerza renovación real del token después de recuperar internet.
+    await user.getIdToken(true);
+    return user;
+  } catch (error) {
+    // Si la sesión anónima quedó dañada durante el corte, creamos una nueva.
+    // Solo hacemos este fallback para usuarios anónimos; nunca cerramos
+    // automáticamente una cuenta administrativa Email/Password.
+    if (!user.isAnonymous) {
+      throw error;
+    }
+
+    await signOut(auth);
+    const credential = await signInAnonymously(auth);
+    await credential.user.getIdToken(true);
+
+    return credential.user;
+  }
+}
+
+export async function ensureFreshFirebaseUser() {
   if (auth.currentUser) {
-    return auth.currentUser;
+    return refreshAnonymousSession(auth.currentUser);
   }
 
   const credential = await signInAnonymously(auth);
+  await credential.user.getIdToken(true);
+
   return credential.user;
 }
 
@@ -32,7 +59,7 @@ export async function uploadVibeToCloud(
   vibe: StoredVibe,
   onProgress?: (progress: CloudUploadProgress) => void
 ) {
-  const user = await ensureAnonymousUser();
+  const user = await ensureFreshFirebaseUser();
 
   const storagePath =
     `vibedump/${EVENT_ID}/${user.uid}/${vibe.id}.jpg`;

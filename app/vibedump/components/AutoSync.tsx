@@ -9,7 +9,30 @@ import {
 
 const SYNC_EVENT = "vibedump-sync-complete";
 const REQUEST_EVENT = "vibedump-request-sync";
-const RETRY_INTERVAL_MS = 30000;
+const RETRY_MS = 5000;
+
+async function hasRealConnection() {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      `/vibedump?connectivity=${Date.now()}`,
+      {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "x-vibedump-connectivity-check": "1",
+        },
+      }
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
 export default function AutoSync() {
   const runningRef = useRef(false);
@@ -28,10 +51,15 @@ export default function AutoSync() {
 
     try {
       const summary = await getSyncSummary();
+
       const needsSync =
         summary.pending + summary.uploading + summary.error > 0;
 
       if (!needsSync) return;
+
+      const connected = await hasRealConnection();
+
+      if (!connected) return;
 
       const result = await syncPendingVibes();
 
@@ -60,14 +88,14 @@ export default function AutoSync() {
 
       if (queuedRef.current) {
         queuedRef.current = false;
-        window.setTimeout(runSync, 500);
+        window.setTimeout(runSync, 600);
       }
     }
   }, []);
 
   useEffect(() => {
     const onOnline = () => {
-      window.setTimeout(runSync, 300);
+      window.setTimeout(runSync, 800);
     };
 
     const onFocus = () => {
@@ -94,15 +122,15 @@ export default function AutoSync() {
     window.addEventListener(REQUEST_EVENT, onRequest);
     document.addEventListener("visibilitychange", onVisible);
 
-    // Primera comprobación al entrar/reabrir VibeDump.
-    const initialTimer = window.setTimeout(runSync, 800);
+    const initialTimer = window.setTimeout(runSync, 700);
 
-    // Respaldo para móviles que no disparan correctamente el evento "online".
+    // Mientras haya una foto pendiente, esta comprobación periódica evita
+    // depender de eventos de reconexión poco fiables en móviles.
     const retryTimer = window.setInterval(() => {
       if (document.visibilityState === "visible") {
         runSync();
       }
-    }, RETRY_INTERVAL_MS);
+    }, RETRY_MS);
 
     return () => {
       window.removeEventListener("online", onOnline);
@@ -110,6 +138,7 @@ export default function AutoSync() {
       window.removeEventListener("pageshow", onPageShow);
       window.removeEventListener(REQUEST_EVENT, onRequest);
       document.removeEventListener("visibilitychange", onVisible);
+
       window.clearTimeout(initialTimer);
       window.clearInterval(retryTimer);
     };
