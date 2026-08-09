@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /vibedump/xv-sandra-alicia-2026/{userId}/{fileName} {
+      allow create, update: if request.auth != null
+                            && request.auth.uid == userId
+                            && request.resource.size < 8 * 1024 * 1024
+                            && request.resource.contentType == 'image/jpeg';
+
+      allow read, delete: if request.auth != null
+                          && request.auth.uid == "RKZ0KSOZ5xhSMp8wF431qSzFYvM2";
+    }
+
+    match /vibedump-public/xv-sandra-alicia-2026/{fileName} {
+      allow read: if true;
+
+      allow create, update: if request.auth != null
+                            && request.auth.uid == "RKZ0KSOZ5xhSMp8wF431qSzFYvM2"
+                            && request.resource.size < 8 * 1024 * 1024
+                            && request.resource.contentType == 'image/jpeg';
+
+      allow delete: if request.auth != null
+                    && request.auth.uid == "RKZ0KSOZ5xhSMp8wF431qSzFYvM2";
+    }
+  }
+}

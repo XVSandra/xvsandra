@@ -1,0 +1,20 @@
+match /vibedumpPhotos/{photoId} {
+
+  // Invitados: crean/actualizan solamente su propio registro pendiente.
+  allow create, update: if request.auth != null
+                        && request.resource.data.ownerUid == request.auth.uid
+                        && request.resource.data.vibeId == photoId
+                        && request.resource.data.eventId == "xv-sandra-alicia-2026"
+                        && request.resource.data.guestName is string
+                        && request.resource.data.guestName.size() >= 2
+                        && request.resource.data.guestName.size() <= 40
+                        && request.resource.data.storagePath is string
+                        && request.resource.data.source in ["camera", "gallery"]
+                        && request.resource.data.status == "pending_review"
+                        && request.resource.data.optimizedSize is int
+                        && request.resource.data.optimizedSize < 8 * 1024 * 1024;
+
+  // Admin: sustituye ADMIN_UID_AQUI por el UID real.
+  allow read, update, delete: if request.auth != null
+                              && request.auth.uid == "ADMIN_UID_AQUI";
+}

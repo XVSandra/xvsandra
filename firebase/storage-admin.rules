@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /vibedump/xv-sandra-alicia-2026/{userId}/{fileName} {
+
+      // Invitados: solo escriben en su propia carpeta.
+      allow create, update: if request.auth != null
+                            && request.auth.uid == userId
+                            && request.resource.size < 8 * 1024 * 1024
+                            && request.resource.contentType == 'image/jpeg';
+
+      // Admin: sustituye ADMIN_UID_AQUI por el UID real.
+      allow read, delete: if request.auth != null
+                          && request.auth.uid == "ADMIN_UID_AQUI";
+    }
+  }
+}
